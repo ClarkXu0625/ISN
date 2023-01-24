@@ -24,8 +24,8 @@ frmat_i = zeros(N,numel(tvec));
 Imat_i = frmat_i;
 
 %% parameters 
-theta_e_vec = 0:0.01:10;   %threshold of activity for e. cells
-theta_i_vec = 0:0.01:10;   %threshold of activity for i. cells
+theta_e_vec = 0:0.1:10;   %threshold of activity for e. cells
+theta_i_vec = 0:0.1:10;   %threshold of activity for i. cells
 alpha_e = 0.1; %gain of e. cells
 alpha_i = 1;   %gain of i. cells
 tao_e = 10e-3; %time constant of e. cells
