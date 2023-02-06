@@ -83,7 +83,7 @@ for t = 2:numel(tvec)
 end
 
 %% preliminary figures
-i=6;
+i=2;
 
 figure(3)
 plot(tvec,frmat_e(i,:))
