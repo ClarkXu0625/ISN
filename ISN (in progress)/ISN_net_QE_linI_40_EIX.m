@@ -77,7 +77,7 @@ end
 figure(1)
 clf
 subplot(2,1,1)
-plot(t,re), ylabel("E. Frates")
+plot(t,re), ylabel("E. Firing_rates")
 subplot(2,1,2)
-plot(t,ri), ylabel("I. Frates"), xlabel("Time")
+plot(t,ri), ylabel("I. Firing_rates"), xlabel("Time")
 

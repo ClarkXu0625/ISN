@@ -10,7 +10,7 @@
 
 %% 
 N=10;          %value for how many E-I unit pairs
-on = 7;        %value for how many pairs will be "on"
+on = 5;        %value for how many pairs will be "on"
 
 tmax = 10;
 dt = 0.0001;  
@@ -83,17 +83,37 @@ for t = 2:numel(tvec)
 end
 
 %% preliminary figures
+i=6;
+
 figure(3)
-for i=1:N
-    subplot(4,3,i), plot(tvec,frmat_e(i,:)),  hold on, plot(tvec,frmat_i(i,:)), ylabel("Fr Unit#"+i), xlabel("Time(s)"), hold off;
-end
+plot(tvec,frmat_e(i,:))
+hold on
+plot(tvec,frmat_i(i,:))
 legend("excit.","inhib.")
+
 figure(4)
-for i=1:N
-    subplot(4,3,i), plot(tvec,Imat_e(i,:)),  hold on, plot(tvec,Imat_i(i,:)),   ylabel("Total input Unit#"+i), xlabel("Time(s)"), hold off;
-end
-legend("excit.","inhib."),
+i=1;
+plot(tvec,Imat_e(i,:))
+hold on
+plot(tvec,Imat_i(i,:))
+legend("excit.","inhib.")
+
 figure(5)
-for i=1:N
-    subplot(4,3,i), plot(tvec,Iapp_mat(i,:)), ylabel("Total Iapp Unit#"+i), xlabel("Time(s)"), hold off;
-end
+plot(tvec,Iapp_mat(i,:))
+
+%for i=1:N
+    %subplot(4,3,i), plot(tvec,frmat_e(i,:)),  hold on, plot(tvec,frmat_i(i,:)), ylabel("Fr Unit#"+i), xlabel("Time(s)"), hold off;
+%end
+
+
+
+%figure(4)
+
+%for i=1:N
+    %subplot(4,3,i), plot(tvec,Imat_e(i,:)),  hold on, plot(tvec,Imat_i(i,:)),   ylabel("Total input Unit#"+i), xlabel("Time(s)"), hold off;
+%end
+%legend("excit.","inhib."),
+%figure(5)
+%for i=1:N
+    %subplot(4,3,i), plot(tvec,Iapp_mat(i,:)), ylabel("Total Iapp Unit#"+i), xlabel("Time(s)"), hold off;
+%end

@@ -1,0 +1,7 @@
+% This code is to written to familiarize with firing-rate model and testing
+% for set of parameters
+% Data is from Spatiotemporal Discrimination in Attractor Networks with
+% Short-term Synaptic Plasticity
+%%%%%%%
+N_E=100;    % number of excitatory cells
+N_I=1;      % population of in

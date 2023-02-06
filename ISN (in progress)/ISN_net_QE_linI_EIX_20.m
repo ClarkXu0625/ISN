@@ -44,6 +44,7 @@ Ie_base=-1;
 %% applied charge
 i_stimmat = zeros(N,numel(tvec));%each row is a vector for applied current to each coupled set's inhibitory unit, with # of columns = tmax/dt
 Iapp_e = ones(size(i_stimmat))*Ie_base;
+
 %random noise
 for i = 1:N
     noisevec = randn(size(tvec))*(dt^(0.5))*15;
@@ -59,7 +60,7 @@ i_stimmat(1:on,ceil(10/dt):ceil(10.1/dt))= 10;
 %
 
 
-Iapp_e(1:20,ceil(0.5/dt):ceil(1/dt))= 3; 
+Iapp_e(1:20,ceil(0.5/dt):ceil(1/dt))= 3; %3
 Iapp_i = ones(size(i_stimmat))*(Ii_base) + i_stimmat;
 
 %% simulation
@@ -70,19 +71,13 @@ for t = 2:numel(tvec)
 
         frmat_e(c,t) = frmat_e(c,t-1) + (dt/tao_e)*(-frmat_e(c,t-1) + alpha_e*(Imat_e(c,t)-theta_e)^2 *sign(Imat_e(c,t)-theta_e));
         frmat_i(c,t) = frmat_i(c,t-1) + (dt/tao_i)*(-frmat_i(c,t-1) + alpha_i*(Imat_i(c,t)-theta_i));
-
-        if frmat_i(c,t)>rmax
-            frmat_i(c,t)=rmax;
-        end
-        if frmat_i(c,t)<0
-            frmat_i(c,t)=0;
-        end
-        if frmat_e(c,t)>rmax
-            frmat_e(c,t)=rmax;
-        end
-        if frmat_e(c,t)<0
-            frmat_e(c,t)=0;
-        end
+        
+        % limit the firing rate within the range within 0-rmax
+        frmat_i(c,t)=min(frmat_i(c,t),rmax);
+        frmat_i(c,t)=max(frmat_i(c,t),0);
+        frmat_e(c,t)=min(frmat_e(c,t),rmax);
+        frmat_e(c,t)=max(frmat_e(c,t),0);
+        
     end
 end
 
