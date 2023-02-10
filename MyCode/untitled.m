@@ -9,8 +9,8 @@
 
 
 %% 
-N=10;          %value for how many E-I unit pairs
-on = 5;        %value for how many pairs will be "on"
+N=100;          %value for how many E-I unit pairs
+on = 70;        %value for how many pairs will be "on"
 
 tmax = 10;
 dt = 0.0001;  
