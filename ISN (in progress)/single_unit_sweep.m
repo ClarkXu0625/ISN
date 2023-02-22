@@ -79,38 +79,38 @@ for theta_e=theta_e_vec
     for theta_i=theta_i_vec
     i=i+1;
 
-%% simulation
-for t = 2:numel(tvec)
-        Imat_i(:,t) = WEI*frmat_e(:,t-1) + WII*frmat_i(:,t-1) + Iapp_i(:,t) + WEIX*(sum(frmat_e(:,t-1)) - frmat_e(:,t-1));
-        Imat_e(:,t) = WEE*frmat_e(:,t-1) + WIE*frmat_i(:, t-1) + Iapp_e(:,t);
-
-        frmat_e(:,t) = frmat_e(:,t-1) + (dt/tao_e).*(-frmat_e(:,t-1) + alpha_e*(Imat_e(:,t)-theta_e).^2 .*sign(Imat_e(:,t)-theta_e));
-        frmat_i(:,t) = frmat_i(:,t-1) + (dt/tao_i).*(-frmat_i(:,t-1) + alpha_i*(Imat_i(:,t)-theta_i));
+        %% simulation
+        for t = 2:numel(tvec)
+                Imat_i(:,t) = WEI*frmat_e(:,t-1) + WII*frmat_i(:,t-1) + Iapp_i(:,t) + WEIX*(sum(frmat_e(:,t-1)) - frmat_e(:,t-1));
+                Imat_e(:,t) = WEE*frmat_e(:,t-1) + WIE*frmat_i(:, t-1) + Iapp_e(:,t);
         
-        frmat_i(:,t)=min(frmat_i(:,t),rmax);
-        frmat_e(:,t)=min(frmat_e(:,t),rmax);
-        frmat_i(:,t)=max(frmat_i(:,t),0);
-        frmat_e(:,t)=max(frmat_e(:,t),0);
-
-end
-            works = true;
-            
-            if frmat_e(ceil(1.5/dt))<0.2
-                works=false;
-            end
-            if frmat_e(ceil(1.5/dt))>90
-                works=false;
-            end
-            if frmat_e(ceil(4/dt))>0.2
-                works=false;
-            end
-            if works==true
-                Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
-                outputmat(3,i)=outputmat(3,i) + Nss;
-                outputmat(4,i)= mean(frmat_e(ceil(0.1/dt):floor(1.99/dt)));
-            end
-
+                frmat_e(:,t) = frmat_e(:,t-1) + (dt/tao_e).*(-frmat_e(:,t-1) + alpha_e*(Imat_e(:,t)-theta_e).^2 .*sign(Imat_e(:,t)-theta_e));
+                frmat_i(:,t) = frmat_i(:,t-1) + (dt/tao_i).*(-frmat_i(:,t-1) + alpha_i*(Imat_i(:,t)-theta_i));
+                
+                frmat_i(:,t)=min(frmat_i(:,t),rmax);
+                frmat_e(:,t)=min(frmat_e(:,t),rmax);
+                frmat_i(:,t)=max(frmat_i(:,t),0);
+                frmat_e(:,t)=max(frmat_e(:,t),0);
+        
         end
+        works = true;
+            
+        if frmat_e(ceil(1.5/dt))<0.2
+            works=false;
+        end
+        if frmat_e(ceil(1.5/dt))>90
+            works=false;
+        end
+        if frmat_e(ceil(4/dt))>0.2
+            works=false;
+        end
+        if works==true
+            Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
+            outputmat(3,i)=outputmat(3,i) + Nss;
+            outputmat(4,i)= mean(frmat_e(ceil(0.1/dt):floor(1.99/dt)));
+        end
+
+    end
 end
 
 imagemat=zeros(101,101);

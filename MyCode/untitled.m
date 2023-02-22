@@ -1,119 +1,83 @@
-%Coupled Inhibition Stabilized Circuits
-%6/28/22
-%Code written by Connor Zawacki for the Miller Lab at Brandeis University
+% Network with N total inhibition-stabilized excitatory-inhibitory units. 
+% M of those pairs we attempt to make "active", and N-M pairs we try to 
+% suppress.
 
-%IS regimine with  linear firing rate equations for all units and
-%I-E cross connections.
+%Originally Written by Paul Miller
+%Modified and Commented by Connor Zawacki
 
-%Based on code written by Paul Miller
+%WEIX cross connection
+%No WIEX cross connection
+%linear inhibitory unit Firing rate
+%nonlinear excitatory unit Firing rate
 
+clear
+N = 10;         %Total excitatory-inhibitory firing rate unit pairs
+M = 5;         %Total number of active excitatory-inhibitory firing rate unit pairs
 
-%% 
-N=100;          %value for how many E-I unit pairs
-on = 70;        %value for how many pairs will be "on"
+dt = 0.0001;    %Time step for simulation
+tmax = 6;       %Duration of Simulation
+t = 0:dt:tmax;  %Simulation time vector
+Nt = length(t);
 
-tmax = 10;
-dt = 0.0001;  
-tvec = 0:dt:tmax;
-rmax = 100;    %max frate
+taue = 0.010;   %Time constant for excitatory cells
+taui = 0.005;   %Time constant for inhibitory cells
 
-frmat_e = zeros(N,numel(tvec));
-Imat_e = frmat_e;
-frmat_i = zeros(N,numel(tvec));
-Imat_i = frmat_i;
+Wee0 = 3;       %Excit.-Excit. connection strength
+Wie0 = -3;      %Inhib.-Excit. connection strength
+Wei0 = 3.5;     %Excit-Inhib connection strength
+Weix = 0.025;   %Excit.-Inhibitory Cross connection strength
+Wiex = 0.0;     %Inhibitory.-Excitatory Cross connection strength
+Wii0 = -3;      %Inhib-Inhib connection strength
 
-%% parameters to vary
-theta_e = 0;  %threshold of activity for e. cells
-theta_i = 0;   %threshold of activity for i. cells
-alpha_e = 1;   %gain of e. cells    
-alpha_i = 1;   %gain of i. cells
-tao_e = 0.01;  %time constant of e. cells
-tao_i = 0.01;  %time constant of i. cells
+I0e = -1;       %Excit. applied current
+I0i = -10;      %Inhib. applied current
 
-WEI = 5;     %connection strength from e. to i. cells
-WEE = 3.2;       %connection strength from e. cell to self
-WII = -3;      %connection strength from i. cell to self
-WIE = -2.5;    %connection strength from i. to e cells
-WIEX = -0.65;     %connection strength from e. cells to i cells from other coupled units. must be changed with N
+reh = 30;       %Initial frate of excit cells50
+rih = 45;       %Initial frate of inhib cells
 
-Ii_base=-10;
-Ie_base=10;
+alpha_e = 0.1;  %Gain of excit. cells
+alpha_i = 1;    %Gain of inhib. cells
 
-%% applied charge
-i_stimmat = zeros(N,numel(tvec));%each row is a vector for applied current to each coupled set's inhibitory unit, with # of columns = tmax/dt
+%Connection matricies
+Wee = Wee0*eye(N);
+Wie = Wie0*eye(N);
+Wie = (Wie0-Wiex)*eye(N) + Wiex*ones(N);
+Wei = (Wei0-Weix)*eye(N) + Weix*ones(N);
+Wii = Wii0*eye(N);
 
-%random noise
-for i = 1:N
-    noisevec = randn(size(tvec))*(dt^(0.5))*15;
-    i_stimmat(i,:)= noisevec;
+%Current Matricies
+Ie = I0e*ones(N,1);
+Ii = I0i*ones(N,1);
+
+Wei_tilde = Wei0/(1-Wii0);
+Wie_tilde = (-Wie0)/(1-Wii0);
+Wiex_tilde = (-Wiex)/(1-Wii0);
+I0i_tilde = I0i*Wie_tilde;
+
+%Rate Matricies
+re = zeros(N,Nt);   
+ri = zeros(N,Nt);   
+re(1:M,1) = reh;
+ri(1:M,1) = rih;
+
+sigman = 0.002/sqrt(dt);
+
+%simulation
+for i = 2:Nt
+    Ie_tot = (Wee*re(:,i-1)+ Wie*ri(:,i-1) + Ie + sigman*randn(N,1));
+    Ie_tot = max(Ie_tot,0);
+    re(:,i) = re(:,i-1) + dt*(-eye(N)*re(:,i-1) + alpha_e*Ie_tot.^2 )/taue;
+    Ii_tot = (Wei*re(:,i-1) + Wii*ri(:,i-1) + Ii + sigman*randn(N,1));
+    Ii_tot = max(Ii_tot,0);
+    ri(:,i) = ri(:,i-1) + dt*(-eye(N)*ri(:,i-1)+alpha_i*Ii_tot )/taui;
+    re(:,i) = max(re(:,i),0);
+    ri(:,i) = max(ri(:,i),0);
 end
 
-%transition 1
-i_stimmat(1:on,ceil(1/dt):ceil(1.1/dt))= -15;    
+figure(1)
+clf
+subplot(2,1,1)
+plot(t,re), ylabel("E. Firing_rates")
+subplot(2,1,2)
+plot(t,ri), ylabel("I. Firing_rates"), xlabel("Time")
 
-
-%transition 2 
-%
-
-Iapp_e = ones(size(tvec))*Ie_base;
-Iapp_mat = ones(size(i_stimmat))*(Ii_base) + i_stimmat;
-
-%% simulation
-for t = 2:numel(tvec)
-    for c = 1:N
-        Imat_i(c,t) = WEI*frmat_e(c,t-1) + WII*frmat_i(c,t-1) + Iapp_mat(c,t);
-        Imat_e(c,t) = WEE*frmat_e(c,t-1) + WIE*frmat_i(c, t-1) + WIEX*(sum(frmat_i(:,t-1)) - frmat_i(c,t-1)) + Iapp_e(t);
-
-        frmat_e(c,t) = frmat_e(c,t-1) + (dt/tao_e)*(-frmat_e(c,t-1) + alpha_e*(Imat_e(c,t)-theta_e));
-        frmat_i(c,t) = frmat_i(c,t-1) + (dt/tao_i)*(-frmat_i(c,t-1) + alpha_i*(Imat_i(c,t)-theta_i));
-
-        if frmat_i(c,t)>rmax
-            frmat_i(c,t)=rmax;
-        end
-        if frmat_i(c,t)<0
-            frmat_i(c,t)=0;
-        end
-        if frmat_e(c,t)>rmax
-            frmat_e(c,t)=rmax;
-        end
-        if frmat_e(c,t)<0
-            frmat_e(c,t)=0;
-        end
-    end
-end
-
-%% preliminary figures
-i=2;
-
-figure(3)
-plot(tvec,frmat_e(i,:))
-hold on
-plot(tvec,frmat_i(i,:))
-legend("excit.","inhib.")
-
-figure(4)
-i=1;
-plot(tvec,Imat_e(i,:))
-hold on
-plot(tvec,Imat_i(i,:))
-legend("excit.","inhib.")
-
-figure(5)
-plot(tvec,Iapp_mat(i,:))
-
-%for i=1:N
-    %subplot(4,3,i), plot(tvec,frmat_e(i,:)),  hold on, plot(tvec,frmat_i(i,:)), ylabel("Fr Unit#"+i), xlabel("Time(s)"), hold off;
-%end
-
-
-
-%figure(4)
-
-%for i=1:N
-    %subplot(4,3,i), plot(tvec,Imat_e(i,:)),  hold on, plot(tvec,Imat_i(i,:)),   ylabel("Total input Unit#"+i), xlabel("Time(s)"), hold off;
-%end
-%legend("excit.","inhib."),
-%figure(5)
-%for i=1:N
-    %subplot(4,3,i), plot(tvec,Iapp_mat(i,:)), ylabel("Total Iapp Unit#"+i), xlabel("Time(s)"), hold off;
-%end

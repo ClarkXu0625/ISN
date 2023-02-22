@@ -1,42 +1,41 @@
-% Coupled Inhibition Stabilized Circuits
-% Code written by Connor Zawacki for the Miller Lab at Brandeis University
-% Commented and edited by Clark Xu, used as template for all other firing
-% rate models.
+%Coupled Inhibition Stabilized Circuits
+%7/26/22
+%Code written by Connor Zawacki for the Miller Lab at Brandeis University
 
-% IS regimine with non linear firing rate equations for Excitatory units and
-% no cross connections. 
+%IS regimine with non linear firing rate equations for Excitatory units and
+%no cross connections. 
 
-% Looking for an single unit bistability
+%Looking for an single unit bistability
+
 
 
 %% 
 N=1;          %value for how many coupled networks
 
 
-tmax = 5;   % 5-second simulation
-dt = 0.0001;  % 0.1 ms time step
+tmax = 5;
+dt = 0.0001;  
 tvec = 0:dt:tmax;
-rmax = 100;    % maximum firing rate is 100 Hz
+rmax = 100;    
 
-% firing rate and current vector for excitatory and inhibitory cell
 frmat_e = zeros(N,numel(tvec));
 Imat_e = frmat_e;
 frmat_i = zeros(N,numel(tvec));
 Imat_i = frmat_i;
 
 %% parameters 
-theta_e_vec = 0:0.1:10;   % threshold of activity for e. cells
-theta_i_vec = 0:0.1:10;   % threshold of activity for i. cells
-alpha_e = 0.1; % gain of e. cells
-alpha_i = 1;   % gain of i. cells
-tao_e = 10e-3; % time constant of e. cells
-tao_i = 5e-3;  % time constant of i. cells
+theta_e_vec = 0:0.1:10;   %threshold of activity for e. cells
+theta_i_vec = 0:0.1:10;   %threshold of activity for i. cells
+alpha_e = 0.1; %gain of e. cells
+alpha_i = 1;   %gain of i. cells
+tao_e = 10e-3; %time constant of e. cells
+tao_i = 5e-3;  %time constant of i. cells
 
-WEI = 3.5;     % connection strength from e. to i. cells 3.5
-WEE = 3;       % connection strength from e. cell to self 3
-WII = -3;      % connection strength from i. cell to self
-WIE = -3.5;    % connection strength from i. to e cells
-WEIX = 0;     % connection strength from e. cells to i cells from other coupled units. must be changed with N
+WEI = 3.5;     %connection strength from e. to i. cells 3.5
+WEE = 3;       %connection strength from e. cell to self 3
+WII = -3;      %connection strength from i. cell to self
+WIE = -3.5;    %connection strength from i. to e cells
+WEIX = 0;     %connection strength from e. cells to i cells from other coupled units. must be changed with N
 
 Ii_base=-10;
 Ie_base=-1;
@@ -48,6 +47,7 @@ i_stimmat = zeros(N,numel(tvec));%each row is a vector for applied current to ea
 Iapp_e = ones(size(i_stimmat))*Ie_base;
 
 %random noise
+
 for i = 1:N
     noisevec = randn(size(tvec))*(dt^(0.5))*15;
     i_stimmat(i,:)= noisevec;
