@@ -16,4 +16,3 @@ delta_E = 1;    % sensitivity current
 delta_I = 3;
 thresholdE = 6;
 
-Inpu
