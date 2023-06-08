@@ -76,7 +76,7 @@ end
 figure(1)
 clf
 subplot(2,1,1)
-plot(t,re), legend("Inhib.","Excit."), xlabel("Non-active pair"), ylabel("Firing Rate")
+plot(t,re), legend("Active","Non-active"), xlabel("Excit."), ylabel("Firing Rate")
 subplot(2,1,2)
-plot(t,ri), legend("Inhib.","Excit."), xlabel("Active pair"), ylabel("Firing Rate")
+plot(t,ri), legend("Active","Non-active"), xlabel("Inhib."), ylabel("Firing Rate")
 
