@@ -113,6 +113,7 @@ for theta_e=theta_e_vec
     end
 end
 
+figure(99)
 imagemat=zeros(101,101);
 
 for i = 1:101

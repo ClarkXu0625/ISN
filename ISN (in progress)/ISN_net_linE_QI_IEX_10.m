@@ -13,7 +13,7 @@
 
 %% 
 N=10;          %value for how many coupled networks
-on = 4;
+on = 6;
 tmax = 15;
 dt = 0.1e-3;  
 tvec = 0:dt:tmax;

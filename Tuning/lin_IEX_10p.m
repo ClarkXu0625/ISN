@@ -4,8 +4,9 @@ function [re, ri, dt, M, t] = lin_IEX_10p(reh, rih)
 % suppress.
 
 %Originally Written by Paul Miller
-%Modified and Commented by Connor Zawacki
+%Modified and Commented by Connor Zawacki and Yilin Xu
 
+% function called in main, input is initial firing rate for e and i unit
 %No WEIX cross connection
 %WIEX cross connection
 %linear inhibitory unit Firing rate
@@ -27,7 +28,7 @@ function [re, ri, dt, M, t] = lin_IEX_10p(reh, rih)
     Wie0 = -2.4;        %Inhib.-Excit. connection strength
     Wei0 = 5;           %Excit-Inhib. connection strength
     Weix = 0.0;         %Excit-Inhib. cross connection strength
-    Wiex = -0.5;% tuned from -0.5        %Inhib.-Excit cross connection strength
+    Wiex = -0.5;        %Inhib.-Excit cross connection strength, Increase cross inhibition will cause increased deviation
     Wii0 = -3;          %Inhib-Inhib self inhibition
     
     I0e = 10;           %Excit. applied current
@@ -43,11 +44,11 @@ function [re, ri, dt, M, t] = lin_IEX_10p(reh, rih)
     Ie = I0e*ones(N,1);
     Ii = I0i*ones(N,1);
     
-    random_stimulus = rand(N,1)<0.9;
-    
     %% additional stimulus excitatory current
-    Ie_stim = 0.001*I0e*random_stimulus;
-    Ii_stim = 0.001*I0i*random_stimulus;
+    stimulus = zeros(N,1);
+    stimulus(1:M) = 1;
+    Ie_stim = I0e*stimulus;
+    Ii_stim = I0i*stimulus;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %Inhitial Conditions Calculations
@@ -66,12 +67,14 @@ function [re, ri, dt, M, t] = lin_IEX_10p(reh, rih)
         th_e_tilde = -I0e;
     end
     
-    % Initial firing rate calculated here
-    rih = (Wei0*th_e_tilde + I0i*(Wee0-1) )/ ...
-        ( (1-Wii0)*(Wee0-1) + Wei0*(Wie0 + (M-1)*Wiex) );
-    
-    reh = ( th_e_tilde - rih*(Wie0 + (M-1)*Wiex) )/(Wee0-1);
-    
+    % Initial firing rate calculated here, default value if no params given
+    if nargin<2
+        rih = (Wei0*th_e_tilde + I0i*(Wee0-1) )/ ...
+            ( (1-Wii0)*(Wee0-1) + Wei0*(Wie0 + (M-1)*Wiex) );
+        
+        reh = ( th_e_tilde - rih*(Wie0 + (M-1)*Wiex) )/(Wee0-1);
+    end
+
     if ( ril < 0 ) 
         low_rate_input = M*Wiex*rih + I0e
     else
@@ -84,24 +87,24 @@ function [re, ri, dt, M, t] = lin_IEX_10p(reh, rih)
     
     
     %% Alter initial condition here to find more stable states
-    %reh = 10;
-    %rih = 0;
+    %reh = 5;
+    %rih = 5;
     %%%%%%%%%
     
     re(1:M,1) = reh;
     ri(1:M,1) = rih;  
     
     sigman = 0.05/sqrt(dt);
-    sigman=0;
+    %sigman=0;
     
     for i = 2:Nt
         
         re(:,i) = re(:,i-1) + dt*((Wee-eye(N))*re(:,i-1) + Wie*ri(:,i-1) + Ie + sigman*randn(N,1));
         ri(:,i) = ri(:,i-1) + dt*(Wei*re(:,i-1) + (Wii-eye(N))*ri(:,i-1) + Ii + sigman*randn(N,1));
         
-        if (i*dt)>50 && (i*dt)<50.5
-            re(:,i) = re(:,i) + Ie_stim;
-            ri(:,i) = ri(:,i) + Ii_stim;
+        if (i*dt)>50 && (i*dt)<50.3
+            re(:,i) = re(:,i) + Ie_stim*dt;
+            ri(:,i) = ri(:,i) + Ii_stim*dt;
         end
         re(:,i) = max(re(:,i),0);
         ri(:,i) = max(ri(:,i),0);

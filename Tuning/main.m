@@ -1,6 +1,6 @@
 
 
-[re, ri, dt, M, t] = lin_IEX_10p(10,50);
+[re, ri, dt, M, t] = lin_IEX_10p();
 [average1, deviation1] = stable_state_counter(re, dt, M);
     %[average2, deviation2] = stable_state_counter(ri, dt, M);
     
