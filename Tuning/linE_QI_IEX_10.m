@@ -51,9 +51,7 @@ for i = 1:N
 end
 
 %transition 1
-i_stimmat(1:on,ceil(1/dt):ceil(1.1/dt))= -5;    
-
-
+i_stimmat(1:on,ceil(1/dt):ceil(1.1/dt))= -4;    
 
 
 Iapp_e = ones(size(tvec))*Ie_base;
@@ -84,17 +82,25 @@ for t = 2:numel(tvec)
 end
 
 %% preliminary figures
-figure(3)
+figure(1)
+subplot(2,1,1), plot(tvec, frmat_e), title("E unit");
+subplot(2,1,2), plot(tvec, frmat_i), title("I unit");
+
+%figure(2)
+%subplot(2,1,1), plot(tvec, Imat_e), title("E unit ");
+%subplot(2,1,2), plot(tvec, Imat_i), title("I unit ");
+
+%figure(3)
 for i=1:N
-    subplot(4,3,i), plot(tvec,frmat_e(i,:)),  hold on, plot(tvec,frmat_i(i,:)), ylabel("Fr Unit#"+i), xlabel("Time(s)"), hold off;
+    %subplot(4,3,i), plot(tvec,frmat_e(i,:)),  hold on, plot(tvec,frmat_i(i,:)), ylabel("Fr Unit#"+i), xlabel("Time(s)"), hold off;
 end
-legend("excit.","inhib.")
-figure(4)
+%legend("excit.","inhib.")
+%figure(4)
 for i=1:N
-    subplot(4,3,i), plot(tvec,Imat_e(i,:)),  hold on, plot(tvec,Imat_i(i,:)),   ylabel("Total input Unit#"+i), xlabel("Time(s)"), hold off;
+    %subplot(4,3,i), plot(tvec,Imat_e(i,:)),  hold on, plot(tvec,Imat_i(i,:)),   ylabel("Total input Unit#"+i), xlabel("Time(s)"), hold off;
 end
-legend("excit.","inhib."),
-figure(5)
+%legend("excit.","inhib."),
+%figure(5)
 for i=1:N
-    subplot(4,3,i), plot(tvec,Iapp_mat(i,:)), ylabel("Total Iapp Unit#"+i), xlabel("Time(s)"), hold off;
+    %subplot(4,3,i), plot(tvec,Iapp_mat(i,:)), ylabel("Total Iapp Unit#"+i), xlabel("Time(s)"), hold off;
 end

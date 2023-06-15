@@ -1,12 +1,11 @@
 %Coupled Inhibition Stabilized Circuits
-%7/26/22
-%Code written by Connor Zawacki for the Miller Lab at Brandeis University
 
 %IS regimine with non linear firing rate equations for Excitatory units and
 %no cross connections. 
 
 %Looking for an single unit bistability
 
+% exploration on ranges of different parameters.
 
 
 %% 
@@ -24,19 +23,21 @@ frmat_i = zeros(N,numel(tvec));
 Imat_i = frmat_i;
 
 %% parameters 
-theta_e_vec = 0:0.1:10;   %threshold of activity for e. cells
-theta_i_vec = 0:0.1:10;   %threshold of activity for i. cells
+theta_e_vec = 1;    %0:0.1:10;   %threshold of activity for e. cells
+theta_i_vec = 5;    %0:0.1:10;   %threshold of activity for i. cells
+
 alpha_e = 0.1; %gain of e. cells
 alpha_i = 1;   %gain of i. cells
 tao_e = 10e-3; %time constant of e. cells
 tao_i = 5e-3;  %time constant of i. cells
 
-WEI = 3.5;     %connection strength from e. to i. cells 3.5
-WEE = 3;       %connection strength from e. cell to self 3
-WII = -3;      %connection strength from i. cell to self
-WIE = -3.5;    %connection strength from i. to e cells
+%WEI = 3.5;     %connection strength from e. to i. cells 3.5
+%WEE = 3;       %connection strength from e. cell to self 3
+%WII = -3;      %connection strength from i. cell to self
+%WIE = -3.5;    %connection strength from i. to e cells
 WEIX = 0;     %connection strength from e. cells to i cells from other coupled units. must be changed with N
-
+WEI_vec = 0:0.1:10;
+WEE_vec = 0:0.1:10;
 Ii_base=-10;
 Ie_base=-1;
 
@@ -58,7 +59,6 @@ end
 i_stimmat(1,ceil(2/dt):ceil(2.5/dt))= 15;
 
 
-figure(98), plot(tvec, i_stimmat)
 
 
 %"on switch" 
@@ -72,14 +72,19 @@ Iapp_i = ones(size(i_stimmat))*(Ii_base) + i_stimmat;
 
 outputmat = zeros(4,10201);
 for i = 1:11
-    outputmat(1,(101*(i-1))+1:(101*(i-1))+101)=theta_e_vec(i);
-    outputmat(2,(101*(i-1))+1:(101*(i-1))+101)=theta_i_vec;
+    outputmat(1,(101*(i-1))+1:(101*(i-1))+101)=WEE_vec(i);%theta_e_vec(i);
+    outputmat(2,(101*(i-1))+1:(101*(i-1))+101)=WEI_vec; %theta_i_vec;
 end
-i=0;
-for theta_e=theta_e_vec
-    for theta_i=theta_i_vec
-    i=i+1;
 
+i=0;
+for WEE = WEE_vec
+%for theta_e=theta_e_vec
+    for WEI = WEI_vec
+        WII = -WEE;
+        WIE = -WEI;
+        %for theta_i=theta_i_vec
+        i=i+1;
+    
         %% simulation
         for t = 2:numel(tvec)
                 Imat_i(:,t) = WEI*frmat_e(:,t-1) + WII*frmat_i(:,t-1) + Iapp_i(:,t) + WEIX*(sum(frmat_e(:,t-1)) - frmat_e(:,t-1));
@@ -94,8 +99,12 @@ for theta_e=theta_e_vec
                 frmat_e(:,t)=max(frmat_e(:,t),0);
         
         end
+
+        if WEE==4 && WEI==5
+            figure(97), plot(tvec, frmat_e)
+        end
         works = true;
-            
+        
         if frmat_e(ceil(1.5/dt))<0.2
             works=false;
         end
@@ -110,11 +119,10 @@ for theta_e=theta_e_vec
             outputmat(3,i)=outputmat(3,i) + Nss;
             outputmat(4,i)= mean(frmat_e(ceil(0.1/dt):floor(1.99/dt)));
         end
-
+    
     end
 end
 
-figure(99)
 imagemat=zeros(101,101);
 
 for i = 1:101
@@ -123,10 +131,11 @@ end
 
 x = [0.1,10];
 y = [0.1,10];
+figure(99)
 imagesc(x,y,imagemat);
 set(gca,'YDir','normal');
-xlabel("Inhibitory Threshold")
-ylabel("Excitatory Threshold")
+xlabel("WEI")%"Inhibitory Threshold")
+ylabel("WEE")%"Excitatory Threshold")
 %c = colorbar();
 title("Testing theta values for bistability in a single unit")
 
