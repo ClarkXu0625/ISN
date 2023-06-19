@@ -23,8 +23,8 @@ frmat_i = zeros(N,numel(tvec));
 Imat_i = frmat_i;
 
 %% parameters 
-theta_e_vec = 1;    %0:0.1:10;   %threshold of activity for e. cells
-theta_i_vec = 5;    %0:0.1:10;   %threshold of activity for i. cells
+theta_e = 1;    %0:0.1:10;   %threshold of activity for e. cells
+theta_i = 5;    %0:0.1:10;   %threshold of activity for i. cells
 
 alpha_e = 0.1; %gain of e. cells
 alpha_i = 1;   %gain of i. cells
@@ -33,8 +33,8 @@ tao_i = 5e-3;  %time constant of i. cells
 
 %WEI = 3.5;     %connection strength from e. to i. cells 3.5
 %WEE = 3;       %connection strength from e. cell to self 3
-%WII = -3;      %connection strength from i. cell to self
-%WIE = -3.5;    %connection strength from i. to e cells
+WII = -3;      %connection strength from i. cell to self
+WIE = -3.5;    %connection strength from i. to e cells
 WEIX = 0;     %connection strength from e. cells to i cells from other coupled units. must be changed with N
 WEI_vec = 0:0.1:10;
 WEE_vec = 0:0.1:10;
@@ -58,14 +58,9 @@ end
 %"off switch" 
 i_stimmat(1,ceil(2/dt):ceil(2.5/dt))= 15;
 
-
-
-
 %"on switch" 
 frmat_e(1, 1)= 5;
 %frmat_i(1:on, 1)= 5;
-
-
 
 
 Iapp_i = ones(size(i_stimmat))*(Ii_base) + i_stimmat;
@@ -78,11 +73,7 @@ end
 
 i=0;
 for WEE = WEE_vec
-%for theta_e=theta_e_vec
     for WEI = WEI_vec
-        WII = -WEE;
-        WIE = -WEI;
-        %for theta_i=theta_i_vec
         i=i+1;
     
         %% simulation
@@ -100,8 +91,9 @@ for WEE = WEE_vec
         
         end
 
-        if WEE==4 && WEI==5
-            figure(97), plot(tvec, frmat_e)
+        if WEE==4 && WEI==9
+            figure(97), 
+            plot(tvec, frmat_e)
         end
         works = true;
         
@@ -129,6 +121,7 @@ for i = 1:101
     imagemat(i,:) = outputmat(3,(i-1)*101+1:(i-1)*101+101);
 end
 
+disp(imagemat)
 x = [0.1,10];
 y = [0.1,10];
 figure(99)
