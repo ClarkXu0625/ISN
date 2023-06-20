@@ -3,7 +3,7 @@
 %IS regimine with non linear firing rate equations for Excitatory units and
 %no cross connections. 
 
-%Looking for an single unit bistability
+% Looking for an single unit bistability
 
 % exploration on ranges of different parameters.
 
@@ -40,8 +40,7 @@ WEI_vec = 0:0.1:10;
 WEE_vec = 0:0.1:10;
 Ii_base=-10;
 Ie_base=-1;
-
-
+Trial = length(WEI_vec);    % number of trials for each parameter
 
 %% applied charge
 i_stimmat = zeros(N,numel(tvec));%each row is a vector for applied current to each coupled set's inhibitory unit, with # of columns = tmax/dt
@@ -65,16 +64,23 @@ frmat_e(1, 1)= 5;
 
 Iapp_i = ones(size(i_stimmat))*(Ii_base) + i_stimmat;
 
-outputmat = zeros(4,10201);
-for i = 1:11
-    outputmat(1,(101*(i-1))+1:(101*(i-1))+101)=WEE_vec(i);%theta_e_vec(i);
-    outputmat(2,(101*(i-1))+1:(101*(i-1))+101)=WEI_vec; %theta_i_vec;
+outputmat = zeros(4,Trial,Trial);
+for i = 1:11    
+    outputmat(1,(101*(i-1))+1:(101*(i-1))+101)=WEE_vec(i);
+    outputmat(2,(101*(i-1))+1:(101*(i-1))+101)=WEI_vec;
 end
 
-i=0;
-for WEE = WEE_vec
-    for WEI = WEI_vec
-        i=i+1;
+for i = 1:Trial
+    outputmat(1,:,i) = WEE_vec(i);
+    outputmat(2,i,:) = WEI_vec(i);
+end
+
+
+for i = 1:Trial
+    WEE = WEE_vec(i);
+
+    for j = 1:Trial
+        WEI = WEI_vec(j);
     
         %% simulation
         for t = 2:numel(tvec)
@@ -91,7 +97,7 @@ for WEE = WEE_vec
         
         end
 
-        if WEE==4 && WEI==9
+        if WEE==3.7 && WEI==4
             figure(97), 
             plot(tvec, frmat_e)
         end
@@ -108,27 +114,26 @@ for WEE = WEE_vec
         end
         if works==true
             Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
-            outputmat(3,i)=outputmat(3,i) + Nss;
-            outputmat(4,i)= mean(frmat_e(ceil(0.1/dt):floor(1.99/dt)));
+            outputmat(3,i,j)=outputmat(3,i,j) + Nss;
+            outputmat(4,i,j)= mean(frmat_e(ceil(0.1/dt):floor(1.99/dt)));
         end
     
     end
 end
 
-imagemat=zeros(101,101);
+imagemat1 = reshape(outputmat(3,:,:),[Trial,Trial]);
+imagemat2 = reshape(outputmat(4,:,:),[Trial,Trial]);
 
-for i = 1:101
-    imagemat(i,:) = outputmat(3,(i-1)*101+1:(i-1)*101+101);
-end
 
-disp(imagemat)
+%disp(imagemat)
 x = [0.1,10];
 y = [0.1,10];
-figure(99)
-imagesc(x,y,imagemat);
+figure(99), imagesc(x,y,imagemat1);
 set(gca,'YDir','normal');
 xlabel("WEI")%"Inhibitory Threshold")
 ylabel("WEE")%"Excitatory Threshold")
 %c = colorbar();
 title("Testing theta values for bistability in a single unit")
 
+
+figure(98), imagesc(x,y,imagemat2), set(gca,'YDir','normal');
