@@ -99,7 +99,8 @@ for i = 1:Trial
 
         if WEE==3.7 && WEI==4
             figure(97), 
-            plot(tvec, frmat_e)
+            plot(tvec, frmat_e), title("WEE==3.7 && WEI==4"), 
+            xlabel("time"), ylabel("firing rate")
         end
         works = true;
         
@@ -137,3 +138,4 @@ title("Testing theta values for bistability in a single unit")
 
 
 figure(98), imagesc(x,y,imagemat2), set(gca,'YDir','normal');
+colorbar

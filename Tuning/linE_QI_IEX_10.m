@@ -8,7 +8,7 @@
 %min number of active pairs: 3
 %max number of active pairs: 5
 %investigate stability! 
-
+% 
 
 
 %% 
