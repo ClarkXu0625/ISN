@@ -1,11 +1,11 @@
-%Coupled Inhibition Stabilized Circuits
+% Coupled Inhibition Stabilized Circuits
 
 %IS regimine with non linear firing rate equations for Excitatory units and
-%no cross connections. 
+%no cross connections.
 
-%Looking for an single unit bistability
+% Looking for an single unit bistability
 
-% exploration on ranges of different parameters.
+% Exploration on ranges of different parameters.
 
 
 %% 
@@ -32,15 +32,14 @@ tao_i = 5e-3;  %time constant of i. cells
 
 WEI = 3.5;     %connection strength from e. to i. cells 3.5
 WEE = 3;       %connection strength from e. cell to self 3
-%WII = -3;      %connection strength from i. cell to self
-%WIE = -3.5;    %connection strength from i. to e cells
+% WII = -3;      %connection strength from i. cell to self
+% WIE = -3.5;    %connection strength from i. to e cells
 WEIX = 0;     %connection strength from e. cells to i cells from other coupled units. must be changed with N
 WII_vec = 0:-0.1:-10;
 WIE_vec = 0:-0.1:-10;
 Ii_base=-10;
 Ie_base=-1;
-
-
+Trial = length(WEI_vec);    % number of trials for each parameter
 
 %% applied charge
 i_stimmat = zeros(N,numel(tvec));%each row is a vector for applied current to each coupled set's inhibitory unit, with # of columns = tmax/dt
@@ -53,7 +52,7 @@ for i = 1:N
     i_stimmat(i,:)= noisevec;
     Iapp_e(i,:) = noisevec + Iapp_e(i,:);
 end
-%}
+
 %"off switch" 
 i_stimmat(1,ceil(2/dt):ceil(2.5/dt))= 15;
 
@@ -64,35 +63,42 @@ frmat_e(1, 1)= 5;
 
 Iapp_i = ones(size(i_stimmat))*(Ii_base) + i_stimmat;
 
-outputmat = zeros(4,10201);
-for i = 1:11
-    outputmat(1,(101*(i-1))+1:(101*(i-1))+101)=WII_vec(i);
-    outputmat(2,(101*(i-1))+1:(101*(i-1))+101)=WIE_vec;
+outputmat = zeros(4,Trial,Trial);
+for i = 1:Trial
+    outputmat(1,:,i) = WIE_vec(i);
+    outputmat(2,i,:) = WII_vec(i);
 end
 
-i=0;
-for WII = WII_vec
-    for WIE = WIE_vec
-        i=i+1;
-    
+% Highlighted spot, first place matches the x-axis (WEI), second place 
+% matches the y-axis (WEE).
+highlight = [36 33];
+
+for i = 1:Trial
+    WIE = WIE_vec(i);
+    for j = 1:Trial
+        WII = WII_vec(j);    
         %% simulation
         for t = 2:numel(tvec)
-                Imat_i(:,t) = WEI*frmat_e(:,t-1) + WII*frmat_i(:,t-1) + Iapp_i(:,t) + WEIX*(sum(frmat_e(:,t-1)) - frmat_e(:,t-1));
-                Imat_e(:,t) = WEE*frmat_e(:,t-1) + WIE*frmat_i(:, t-1) + Iapp_e(:,t);
-        
-                frmat_e(:,t) = frmat_e(:,t-1) + (dt/tao_e).*(-frmat_e(:,t-1) + alpha_e*(Imat_e(:,t)-theta_e).^2 .*sign(Imat_e(:,t)-theta_e));
-                frmat_i(:,t) = frmat_i(:,t-1) + (dt/tao_i).*(-frmat_i(:,t-1) + alpha_i*(Imat_i(:,t)-theta_i));
-                
-                frmat_i(:,t)=min(frmat_i(:,t),rmax);
-                frmat_e(:,t)=min(frmat_e(:,t),rmax);
-                frmat_i(:,t)=max(frmat_i(:,t),0);
-                frmat_e(:,t)=max(frmat_e(:,t),0);
-        
+            Imat_i(:,t) = WEI*frmat_e(:,t-1) + WII*frmat_i(:,t-1) + Iapp_i(:,t) + WEIX*(sum(frmat_e(:,t-1)) - frmat_e(:,t-1));
+            Imat_e(:,t) = WEE*frmat_e(:,t-1) + WIE*frmat_i(:, t-1) + Iapp_e(:,t);
+    
+            % Linear-I and Quadratic-E
+            frmat_e(:,t) = frmat_e(:,t-1) + (dt/tao_e).*(-frmat_e(:,t-1) + alpha_e*(Imat_e(:,t)-theta_e).^2 .*sign(Imat_e(:,t)-theta_e));
+            frmat_i(:,t) = frmat_i(:,t-1) + (dt/tao_i).*(-frmat_i(:,t-1) + alpha_i*(Imat_i(:,t)-theta_i));
+            
+            frmat_i(:,t)=min(frmat_i(:,t),rmax);
+            frmat_e(:,t)=min(frmat_e(:,t),rmax);
+            frmat_i(:,t)=max(frmat_i(:,t),0);
+            frmat_e(:,t)=max(frmat_e(:,t),0);       
         end
-
         
-        works = true;
-        
+        % plot time-firingRate curve for designated paremeter values
+        if i==highlight(2) && j==highlight(1)
+            figure(97), 
+            plot(tvec, frmat_e), title("WIE==" +num2str(WIE_vec(i))+ ...
+                " && WII=="+num2str(WII_vec(j))),xlabel("time"), ylabel("firing rate")
+        end
+        works = true;       
         if frmat_e(ceil(1.5/dt))<0.2
             works=false;
         end
@@ -102,29 +108,35 @@ for WII = WII_vec
         if frmat_e(ceil(4/dt))>0.2
             works=false;
         end
+        % Test whether there in intrinsic oscillation
+        if std(frmat_e(ceil(0.1/dt):ceil(1.9/dt)))>1
+            works=false;
+        end
+
         if works==true
             Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
-            outputmat(3,i)=outputmat(3,i) + Nss;
-            outputmat(4,i)= mean(frmat_e(ceil(0.1/dt):floor(1.99/dt)));
+            outputmat(3,i,j)=outputmat(3,i,j) + Nss;
+            outputmat(4,i,j)= mean(frmat_e(ceil(0.1/dt):floor(1.99/dt)));
         end
     
     end
 end
 
-imagemat=zeros(101,101);
+imagemat1 = reshape(outputmat(3,:,:),[Trial,Trial]);
+imagemat2 = reshape(outputmat(4,:,:),[Trial,Trial]);
 
-for i = 1:101
-    imagemat(i,:) = outputmat(3,(i-1)*101+1:(i-1)*101+101);
-end
+% Adding a highlight on the spot that been plotted to see if the right
+% value been analyzed
+imagemat1(highlight(2),highlight(1)) = imagemat1(highlight(2),highlight(1)) + 2;
 
-disp(imagemat)
-x = [-0.1,-10];
-y = [-0.1,-10];
-figure(99)
-imagesc(x,y,imagemat);
-set(gca,'YDir','normal');
-xlabel("WIE")%"Inhibitory Threshold")
-ylabel("WII")%"Excitatory Threshold")
+x = [0,-10];
+y = [0,-10];
+figure(99), imagesc(x,y,imagemat1);
+set(gca,'YDir','normal'), xlabel("WII"), ylabel("WIE");
 %c = colorbar();
 title("Testing theta values for bistability in a single unit")
 
+
+figure(98), imagesc(x,y,imagemat2), set(gca,'YDir','normal');
+xlabel("WII"), ylabel("WIE");
+colorbar
