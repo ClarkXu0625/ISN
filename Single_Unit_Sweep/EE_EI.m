@@ -53,7 +53,7 @@ for i = 1:N
     i_stimmat(i,:)= noisevec;
     Iapp_e(i,:) = noisevec + Iapp_e(i,:);
 end
-%}
+
 %"off switch" 
 i_stimmat(1,ceil(2/dt):ceil(2.5/dt))= 15;
 
@@ -75,10 +75,11 @@ for i = 1:Trial
     outputmat(2,i,:) = WEI_vec(i);
 end
 
-
+% Highlighted spot, first place matches the x-axis (WEI), second place 
+% matches the y-axis (WEE).
+highlight = [36 33];
 for i = 1:Trial
     WEE = WEE_vec(i);
-
     for j = 1:Trial
         WEI = WEI_vec(j);
     
@@ -96,14 +97,14 @@ for i = 1:Trial
                 frmat_e(:,t)=max(frmat_e(:,t),0);
         
         end
-
-        if WEE==3.7 && WEI==4
-            figure(97), 
-            plot(tvec, frmat_e), title("WEE==3.7 && WEI==4"), 
-            xlabel("time"), ylabel("firing rate")
-        end
-        works = true;
         
+        % plot time-firingRate curve for designated paremeter values
+        if i==highlight(2) && j==highlight(1)
+            figure(97), 
+            plot(tvec, frmat_e), title("WEE==" +num2str(WEE_vec(i))+ ...
+                " && WEI=="+num2str(WEI_vec(j))),xlabel("time"), ylabel("firing rate")
+        end
+        works = true;       
         if frmat_e(ceil(1.5/dt))<0.2
             works=false;
         end
@@ -113,6 +114,11 @@ for i = 1:Trial
         if frmat_e(ceil(4/dt))>0.2
             works=false;
         end
+        % Test whether there in intrinsic oscillation
+        if std(frmat_e(ceil(0.1/dt):ceil(1.9/dt)))>1
+            works=false;
+        end
+
         if works==true
             Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
             outputmat(3,i,j)=outputmat(3,i,j) + Nss;
@@ -125,17 +131,18 @@ end
 imagemat1 = reshape(outputmat(3,:,:),[Trial,Trial]);
 imagemat2 = reshape(outputmat(4,:,:),[Trial,Trial]);
 
+% Adding a highlight on the spot that been plotted to see if the right
+% value been analyzed
+imagemat1(highlight(2),highlight(1)) = imagemat1(highlight(2),highlight(1)) + 2;
 
-%disp(imagemat)
 x = [0.1,10];
 y = [0.1,10];
 figure(99), imagesc(x,y,imagemat1);
-set(gca,'YDir','normal');
-xlabel("WEI")%"Inhibitory Threshold")
-ylabel("WEE")%"Excitatory Threshold")
+set(gca,'YDir','normal'), xlabel("WEI"), ylabel("WEE");
 %c = colorbar();
 title("Testing theta values for bistability in a single unit")
 
 
 figure(98), imagesc(x,y,imagemat2), set(gca,'YDir','normal');
+xlabel("WEI"), ylabel("WEE");
 colorbar
