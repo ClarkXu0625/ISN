@@ -1,12 +1,15 @@
 % Coupled Inhibition Stabilized Circuits
-
 %IS regimine with non linear firing rate equations for Excitatory units and
 %no cross connections.
 
 % Looking for an single unit bistability
 
 % Exploration on ranges of different parameters.
+% This template could be used to simulate various firing rate models (i.e.
+% linI-QE, linE-QI, QEI, linEI) by calling matched simulation function file
+% Written by Yilin Xu
 
+clear
 
 %% 
 N=1;          %value for how many coupled networks
@@ -79,19 +82,22 @@ for i = 1:Trial
     for j = 1:Trial
         WEI = WEI_vec(j);    
         %% simulation
-        for t = 2:numel(tvec)
-            Imat_i(:,t) = WEI*frmat_e(:,t-1) + WII*frmat_i(:,t-1) + Iapp_i(:,t) + WEIX*(sum(frmat_e(:,t-1)) - frmat_e(:,t-1));
-            Imat_e(:,t) = WEE*frmat_e(:,t-1) + WIE*frmat_i(:, t-1) + Iapp_e(:,t);
-    
-            % Linear-I and Quadratic-E
-            frmat_e(:,t) = frmat_e(:,t-1) + (dt/tao_e).*(-frmat_e(:,t-1) + alpha_e*(Imat_e(:,t)-theta_e).^2 .*sign(Imat_e(:,t)-theta_e));
-            frmat_i(:,t) = frmat_i(:,t-1) + (dt/tao_i).*(-frmat_i(:,t-1) + alpha_i*(Imat_i(:,t)-theta_i));
-            
-            frmat_i(:,t)=min(frmat_i(:,t),rmax);
-            frmat_e(:,t)=min(frmat_e(:,t),rmax);
-            frmat_i(:,t)=max(frmat_i(:,t),0);
-            frmat_e(:,t)=max(frmat_e(:,t),0);       
-        end
+
+        [frmat_i,frmat_e] = ...
+            linE_QI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax);
+%         for t = 2:numel(tvec)
+%             Imat_i(:,t) = WEI*frmat_e(:,t-1) + WII*frmat_i(:,t-1) + Iapp_i(:,t) + WEIX*(sum(frmat_e(:,t-1)) - frmat_e(:,t-1));
+%             Imat_e(:,t) = WEE*frmat_e(:,t-1) + WIE*frmat_i(:, t-1) + Iapp_e(:,t);
+%     
+%             % Linear-I and Quadratic-E
+%             frmat_e(:,t) = frmat_e(:,t-1) + (dt/tao_e).*(-frmat_e(:,t-1) + alpha_e*(Imat_e(:,t)-theta_e).^2 .*sign(Imat_e(:,t)-theta_e));
+%             frmat_i(:,t) = frmat_i(:,t-1) + (dt/tao_i).*(-frmat_i(:,t-1) + alpha_i*(Imat_i(:,t)-theta_i));
+%             
+%             frmat_i(:,t)=min(frmat_i(:,t),rmax);
+%             frmat_e(:,t)=min(frmat_e(:,t),rmax);
+%             frmat_i(:,t)=max(frmat_i(:,t),0);
+%             frmat_e(:,t)=max(frmat_e(:,t),0);       
+%         end
         
         % plot time-firingRate curve for designated paremeter values
         if i==highlight(2) && j==highlight(1)
