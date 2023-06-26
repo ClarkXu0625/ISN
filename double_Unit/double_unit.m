@@ -5,17 +5,14 @@
 %In particular, this simulation displays bistability within a single 
 %unit given a quadratic firing rate equation for the inhibitory units
 
-%Originally Written by Paul Miller
-%Modified and Commented by Connor Zawacki
-
 %No WEIX cross connection
 %No WIEX cross connection
 %nonlinear inhibitory unit Firing rate
 %linear excitatory unit Firing rate
 
 clear
-N = 4;              %Total excitatory-inhibitory firing rate unit pairs
-M = 2;              %Total number of active excitatory-inhibitory firing rate unit pairs           
+N = 2;              %Total excitatory-inhibitory firing rate unit pairs
+M = 1;              %Total number of active excitatory-inhibitory firing rate unit pairs           
 
 dt = 0.0001;        %Time step for simulation
 tmax = 10;          %Duration of simulation
@@ -28,7 +25,8 @@ taui = 0.010;       %Time constant for Inhibitory cells
 Wee0 = 1.5;         %Excit.-Excit. connection strength
 Wie0 = -0.4;        %Inhib.-Excit. connection strength
 Wei0 = 2.5;         %Excit-Excit connection strength
-Weix = 0;           %Excit.-Inhibitory Cross connection strength
+Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
+Wiex = 0;
 Wii0 = -1;          %Inhib-Inhib connection strength
 
 I0e = 1;            %Excit. applied current
@@ -39,7 +37,7 @@ alpha_i = 0.02;     %Gain of inhib. cells
 
 %Connection Matricies
 Wee = Wee0*eye(N);
-Wie = Wie0*eye(N);
+Wie = (Wie0-Wiex)*eye(N) + Wiex*ones(N);
 Wei = (Wei0-Weix)*eye(N) + Weix*ones(N);
 Wii = Wii0*eye(N);
 
@@ -50,7 +48,7 @@ Ii = I0i*ones(N,1);
 Wie_tilde = (-Wie0)/(1-Wii0);
 I0i_tilde = I0i*Wie_tilde;
 off_stable = Wee0 - 1 - Wie_tilde*(Wei0-Weix);
-disp("off_stable = " + off_stable)
+disp(off_stable)
 
 %Rate Matricies
 re = zeros(N,Nt);
@@ -79,4 +77,21 @@ subplot(2,1,1)
 plot(t,re), legend("Active","Non-active"), xlabel("Excit."), ylabel("Firing Rate")
 subplot(2,1,2)
 plot(t,ri), legend("Active","Non-active"), xlabel("Inhib."), ylabel("Firing Rate")
+
+disp(is_bistable(N, re(:,ceil(1/dt:end)),ri(:,ceil(1/dt:end))))
+
+
+% Given the number of unit, firing rate of excit. and inhib. units, return
+% if the units showing multi-stablity, or firing at uniform firing rate
+function [bistable] = is_bistable(N, re, ri)
+    excit_average = zeros(1,N);
+    inhib_average = zeros(1,N);
+    for i = 1:N
+        excit_average(i) = mean(re(i,:));
+        inhib_average(i) = mean(ri(i,:));
+    end
+    disp(std(excit_average))
+    disp(std(inhib_average))
+    bistable = (std(excit_average)>1 || std(inhib_average)>1);
+end
 

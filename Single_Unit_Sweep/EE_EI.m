@@ -76,7 +76,7 @@ end
 % Highlighted spot, first place matches the x-axis (WEI), second place 
 % matches the y-axis (WEE).
 highlight = true;   % Whether highlight the spot on figure.
-highlight_spot = [37 35];
+highlight_spot = [19 20];
 
 for i = 1:Trial
     WEE = WEE_vec(i);
@@ -85,7 +85,7 @@ for i = 1:Trial
 
         %% Simulation, functions are "linI_QE", "linE_QI", and "QEI"
         [frmat_i,frmat_e] = ...
-            QEI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax);
+            linE_QI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax);
         
         % plot time-firingRate curve for designated paremeter values
         if i==highlight_spot(2) && j==highlight_spot(1)
