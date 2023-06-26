@@ -94,27 +94,29 @@ for i = 1:Trial
                 " && WEI=="+num2str(WEI_vec(j))),xlabel("time"), ylabel("firing rate")
         end
 
-        works = true;       
+        %works = true; 
+        Nss =1;
         if frmat_e(ceil(1.5/dt))<0.2
-            works=false;
+            Nss = 0;
         end
         if frmat_e(ceil(1.5/dt))>90
-            works=false;
+            Nss = 0;
         end
         if frmat_e(ceil(4/dt))>0.2
-            works=false;
+            Nss = 0;
         end
         % Test whether there in intrinsic oscillation
         if std(frmat_e(ceil(0.1/dt):ceil(1.9/dt)))>1
-            works=false;
+            Nss = 2;
         end
 
-        if works==true
-            Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
-            outputmat(3,i,j) = outputmat(3,i,j) + Nss;
-            outputmat(4,i,j) = mean(frmat_e(ceil(0.5/dt):floor(1.99/dt)));
-            outputmat(5,i,j) = mean(frmat_e(ceil(2.5/dt):floor(4.5/dt)));
-        end
+        %if works==true
+            % Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
+        outputmat(3,i,j) = outputmat(3,i,j) + Nss;
+        outputmat(4,i,j) = mean(frmat_e(ceil(0.5/dt):floor(1.99/dt)));
+        outputmat(5,i,j) = mean(frmat_e(ceil(2.5/dt):floor(4.5/dt)));
+        %end
+    
     
     end
 end
@@ -125,22 +127,23 @@ imagemat3 = reshape(outputmat(5,:,:),[Trial,Trial]);
 
 % Adding a highlight on the spot that been plotted (used for analysis only)
 if highlight
-    imagemat1(highlight_spot(2),highlight_spot(1)) = ...
-        imagemat1(highlight_spot(2),highlight_spot(1)) + 2;
+    imagemat1(highlight_spot(2),highlight_spot(1)) = 3;
 end
 x = [0,10];
 y = [0,10];
 figure(99), imagesc(x,y,imagemat1);
 set(gca,'YDir','normal'), xlabel("WEI"), ylabel("WEE");
-%c = colorbar();
-title("Testing theta values for bistability in a single unit")
+co = colorbar();
+co.Ticks = [0, 1, 2, 3];
+co.TickLabels = ["single" "bistable" "oscillation" "highlighted"];
+title("Bistability when WII = " + num2str(WII_vec(m)));
 
 
 figure(98), imagesc(x,y,imagemat2), set(gca,'YDir','normal');
-xlabel("WEI"), ylabel("WEE"), title("E-unit steady state firing rate")
+xlabel("WEI"), ylabel("WEE"), title("E-unit average fr, W_II = " + num2str(WII_vec(m)))
 c = colorbar;
 c.Label.String = "firing rate (Hz)";
 
 %figure(97), imagesc(x,y,imagemat3), set(gca,'YDir','normal');
-%xlabel("WEI"), ylabel("WEE");
+%xlabel("WEI"), ylabel("WEE"), title("E-unit firing rate after inhibition input given")
 %colorbar
