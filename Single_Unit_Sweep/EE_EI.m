@@ -35,7 +35,7 @@ tao_i = 5e-3;  %time constant of i. cells
 
 %WEI = 3.5;     %connection strength from e. to i. cells 3.5
 %WEE = 3;       %connection strength from e. cell to self 3
-WII = -3;      %connection strength from i. cell to self
+WII = -1;      %connection strength from i. cell to self
 WIE = -3;    %connection strength from i. to e cells
 WEIX = 0;     %connection strength from e. cells to i cells from other coupled units. must be changed with N
 WEI_vec = 0:0.1:10;
@@ -61,7 +61,7 @@ i_stimmat(1,ceil(2/dt):ceil(2.5/dt))= 15;
 
 %"on switch" 
 frmat_e(1, 1)= 5;
-%frmat_i(1:on, 1)= 5;
+%frmat_i(1, 1)= 5;
 
 
 Iapp_i = ones(size(i_stimmat))*(Ii_base) + i_stimmat;
@@ -76,7 +76,7 @@ end
 % Highlighted spot, first place matches the x-axis (WEI), second place 
 % matches the y-axis (WEE).
 highlight = true;   % Whether highlight the spot on figure.
-highlight_spot = [19 20];
+highlight_spot = [26 31];
 
 for i = 1:Trial
     WEE = WEE_vec(i);
@@ -85,7 +85,7 @@ for i = 1:Trial
 
         %% Simulation, functions are "linI_QE", "linE_QI", and "QEI"
         [frmat_i,frmat_e] = ...
-            linE_QI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax);
+            linI_QE(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax);
         
         % plot time-firingRate curve for designated paremeter values
         if i==highlight_spot(2) && j==highlight_spot(1)
@@ -95,7 +95,7 @@ for i = 1:Trial
         end
 
         %works = true; 
-        Nss =1;
+        Nss = 1;
         if frmat_e(ceil(1.5/dt))<0.2
             Nss = 0;
         end
@@ -136,11 +136,11 @@ set(gca,'YDir','normal'), xlabel("WEI"), ylabel("WEE");
 co = colorbar();
 co.Ticks = [0, 1, 2, 3];
 co.TickLabels = ["single" "bistable" "oscillation" "highlighted"];
-title("Bistability when WII = " + num2str(WII_vec(m)));
+title("Bistability when WII = " + num2str(WII));
 
 
 figure(98), imagesc(x,y,imagemat2), set(gca,'YDir','normal');
-xlabel("WEI"), ylabel("WEE"), title("E-unit average fr, W_II = " + num2str(WII_vec(m)))
+xlabel("WEI"), ylabel("WEE"), title("E-unit average fr, WII = " + num2str(WII))
 c = colorbar;
 c.Label.String = "firing rate (Hz)";
 
