@@ -98,30 +98,12 @@ for i = 1:Trial
             plot(tvec, frmat_e)%, hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
             title("WEE==" +num2str(WEE_vec(i))+" && WEI=="+num2str(WEI_vec(j))),xlabel("time"), ylabel("firing rate")
             disp(std(frmat_e(round(0.2/dt):round(1.9/dt))))
-            [f, oscillates] = spectrum(frmat_e, tvec);
+            [f, oscillates] = spectrum(frmat_e, tvec, dt);
             figure(1), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
         end
 
-        %works = true; 
-        Nss = 1;
-        if frmat_e(ceil(1.5/dt))<0.2
-            Nss = 0;
-        end
-        if frmat_e(ceil(1.5/dt))>90
-            Nss = 0;
-        end
-        if frmat_e(ceil(4/dt))>0.2
-            Nss = 0;
-        end
-        % Test whether there in intrinsic oscillation
-        % Here we only tell the difference by std, not using power spectrum
-        % considering the running time.
-        if std(frmat_e(ceil(0.1/dt):ceil(1.9/dt)))>0.05
-            Nss = 2;
-        end
+        Nss = bistability_analysis(frmat_e, tvec, dt);    % calling bistability analysis
 
-        %if works==true
-            % Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
         outputmat(3,i,j) = outputmat(3,i,j) + Nss;
         outputmat(4,i,j) = mean(frmat_e(ceil(0.5/dt):floor(1.99/dt))); %
         outputmat(5,i,j) = std(frmat_e(ceil(0.5/dt):floor(1.99/dt)));

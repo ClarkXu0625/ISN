@@ -52,7 +52,7 @@ Iapp_e = ones(size(i_stimmat))*Ie_base;
 
 for i = 1:N
     noisevec = randn(size(tvec))*(dt^(0.5))*15;
-    i_stimmat(i,:)= noisevec;[f, oscillates] = spectrum(frmat_e, tvec);
+    i_stimmat(i,:)= noisevec;[f, oscillates] = spectrum(frmat_e, tvec, dt);
             figure(1), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
     Iapp_e(i,:) = noisevec + Iapp_e(i,:);
 end
@@ -103,30 +103,11 @@ for i = 1:Trial
             figure(1), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
         end
 
-        %works = true; 
-        Nss = 1;
-        if frmat_e(ceil(1.5/dt))<0.2
-            Nss = 0;
-        end
-        if frmat_e(ceil(1.5/dt))>90
-            Nss = 0;
-        end
-        if frmat_e(ceil(4/dt))>0.2
-            Nss = 0;
-        end
-        % Test whether there in intrinsic oscillation
-        if std(frmat_e(ceil(0.5/dt):ceil(1.9/dt)))>1
-            Nss = 2;
-        end
+        Nss = bistability_analysis(frmat_e, tvec, dt);    % calling bistability analysis
 
-        %if works==true
-            % Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
         outputmat(3,i,j) = outputmat(3,i,j) + Nss;
         outputmat(4,i,j) = mean(frmat_e(ceil(0.5/dt):floor(1.99/dt)));
-        outputmat(5,i,j) = mean(frmat_e(ceil(2.5/dt):floor(4.5/dt)));
-        %end
-    
-    
+        outputmat(5,i,j) = mean(frmat_e(ceil(2.5/dt):floor(4.5/dt)));    
     end
 end
 

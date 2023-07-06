@@ -103,29 +103,12 @@ for m = 1:length(WII_vec)
                     " && WEI=="+num2str(WEI_vec(j))),xlabel("time"), ylabel("firing rate")
             end
     
-            %works = true; 
-            Nss =1;
-            if frmat_e(ceil(1.5/dt))<0.2
-                Nss = 0;
-            end
-            if frmat_e(ceil(1.5/dt))>90
-                Nss = 0;
-            end
-            if frmat_e(ceil(4/dt))>0.2
-                Nss = 0;
-            end
-            % Test whether there in intrinsic oscillation
-            if std(frmat_e(ceil(0.1/dt):ceil(1.9/dt)))>1
-                Nss = 2;
-            end
-    
-            %if works==true
-                % Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
+
+            Nss = bistability_analysis(frmat_e, tvec, dt);    % calling bistability analysis
+
             outputmat(3,i,j) = outputmat(3,i,j) + Nss;
             outputmat(4,i,j) = mean(frmat_e(ceil(0.5/dt):floor(1.99/dt)));
             outputmat(5,i,j) = mean(frmat_e(ceil(2.5/dt):floor(4.5/dt)));
-            %end
-        
         end
     end
     
