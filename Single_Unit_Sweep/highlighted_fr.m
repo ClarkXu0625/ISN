@@ -2,12 +2,8 @@
 %IS regimine with non linear firing rate equations for Excitatory units and
 %no cross connections.
 
-% Looking for an single unit bistability
-
-% Exploration on ranges of different parameters.
-% This template could be used to simulate various firing rate models (i.e.
-% linI-QE, linE-QI, QEI, linEI) by calling matched simulation function file
-% Written by Yilin Xu
+% Written for faster simulation
+% Single trial that plots the firing rate curve of designated parameters 
 
 clear
 
