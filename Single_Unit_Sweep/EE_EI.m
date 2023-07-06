@@ -77,7 +77,7 @@ end
 % Highlighted spot, first place matches the x-axis (WEI), second place 
 % matches the y-axis (WEE).
 highlight = true;   % Whether highlight the spot on figure.
-highlight_spot = [31, 30];
+highlight_spot = [30 29];
 
 % add all subfolders of current directory into matlab session search
 current_path = pwd;
@@ -98,7 +98,8 @@ for i = 1:Trial
             figure(96), 
             plot(tvec, frmat_e)%, hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
             title("WEE==" +num2str(WEE_vec(i))+" && WEI=="+num2str(WEI_vec(j))),xlabel("time"), ylabel("firing rate")
-            [f, oscillates] = spectrum(frmat_e, tvec);
+            disp(std(frmat_e(ceil(0.5/dt):floor(1.99/dt))))
+            [f, oscillates] = spectrum(frmat_e, tvec, dt);
             figure(1), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
         end
 
