@@ -8,15 +8,7 @@ function Nss = bistability_analysis(fr, t, dt)
 % certain levels (in this case 0.1) to save running time
     
     Nss = 1;
-    if fr(ceil(1.5/dt))<0.2
-        Nss = 0;
-    end
-    if fr(ceil(1.5/dt))>90
-        Nss = 0;
-    end
-    if fr(ceil(4/dt))>0.2
-        Nss = 0;
-    end
+
     % Test whether there in intrinsic oscillation
     % Stops at 0.5 second when neurons are mostly settled down
     if std(fr(ceil(0.5/dt):ceil(1.9/dt)))>0.1
@@ -26,4 +18,13 @@ function Nss = bistability_analysis(fr, t, dt)
         end
     end
 
+    if fr(ceil(1.5/dt))<0.2
+        Nss = 0;
+    end
+    if fr(ceil(1.5/dt))>90
+        Nss = 0;
+    end
+    if fr(ceil(4/dt))>0.2
+        Nss = 0;
+    end
 end
