@@ -78,15 +78,19 @@ end
 highlight = true;   % Whether highlight the spot on figure.
 highlight_spot = [14 20];
 
+% add all subfolders of current directory into matlab session search
+current_path = pwd;
+addpath(genpath(current_path))  
+
+%% simulation
 for i = 1:Trial
     WEE = WEE_vec(i);
     for j = 1:Trial
-        WEI = WEI_vec(j);
-
+        WEI = WEI_vec(j);        
         %% Simulation, functions are "linI_QE", "linE_QI", and "QEI"
         [frmat_i,frmat_e] = ...
             linI_QE(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax);
-        
+       
         % plot time-firingRate curve for designated paremeter values
         if i==highlight_spot(2) && j==highlight_spot(1)
             clf

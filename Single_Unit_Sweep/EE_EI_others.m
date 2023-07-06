@@ -45,6 +45,11 @@ Ii_base=-10;
 Ie_base=-1;
 Trial = length(WEI_vec);    % number of trials for each parameter
 
+% add all subfolders of current directory into matlab session search
+current_path = pwd;
+addpath(genpath(current_path))
+
+
 for m = 1:length(WII_vec)
     WII = WII_vec(m);
     %% applied charge
@@ -81,6 +86,7 @@ for m = 1:length(WII_vec)
     highlight = true;   % Whether highlight the spot on figure.
     highlight_spot = [35 41];
     
+    
     for i = 1:Trial
         WEE = WEE_vec(i);
         for j = 1:Trial
@@ -88,7 +94,7 @@ for m = 1:length(WII_vec)
     
             %% Simulation, functions are "linI_QE", "linE_QI", and "QEI"
             [frmat_i,frmat_e] = ...
-                linI_QE(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax);
+                QEI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax);
             
             % plot time-firingRate curve for designated paremeter values
             if i==highlight_spot(2) && j==highlight_spot(1)
