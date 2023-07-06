@@ -35,7 +35,7 @@ tao_i = 5e-3;  %time constant of i. cells
 
 %WEI = 3.5;     %connection strength from e. to i. cells 3.5
 %WEE = 3;       %connection strength from e. cell to self 3
-WII = -3;      %connection strength from i. cell to self
+WII = -6;      %connection strength from i. cell to self
 WIE = -3;    %connection strength from i. to e cells
 WEIX = 0;     %connection strength from e. cells to i cells from other coupled units. must be changed with N
 WEI_vec = 0:0.1:20;
@@ -76,7 +76,7 @@ end
 % Highlighted spot, first place matches the x-axis (WEI), second place 
 % matches the y-axis (WEE).
 highlight = true;   % Whether highlight the spot on figure.
-highlight_spot = [14 20];
+highlight_spot = [41, 29];
 
 % add all subfolders of current directory into matlab session search
 current_path = '/Users/apple/Documents/GitHub/Lab/Single_Unit_Sweep';
@@ -95,8 +95,11 @@ for i = 1:Trial
         if i==highlight_spot(2) && j==highlight_spot(1)
             clf
             figure(96), 
-            plot(tvec, frmat_e), hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
+            plot(tvec, frmat_e)%, hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
             title("WEE==" +num2str(WEE_vec(i))+" && WEI=="+num2str(WEI_vec(j))),xlabel("time"), ylabel("firing rate")
+            disp(std(frmat_e(round(0.2/dt):round(1.9/dt))))
+            [f, oscillates] = spectrum(frmat_e, tvec);
+            figure(1), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
         end
 
         %works = true; 
@@ -111,15 +114,17 @@ for i = 1:Trial
             Nss = 0;
         end
         % Test whether there in intrinsic oscillation
-        if std(frmat_e(ceil(0.1/dt):ceil(1.9/dt)))>1
+        % Here we only tell the difference by std, not using power spectrum
+        % considering the running time.
+        if std(frmat_e(ceil(0.1/dt):ceil(1.9/dt)))>0.05
             Nss = 2;
         end
 
         %if works==true
             % Nss = 1; %follows combination formula, if 1 unit is bistable, any number out of 20 can be active at once
         outputmat(3,i,j) = outputmat(3,i,j) + Nss;
-        outputmat(4,i,j) = mean(frmat_e(ceil(0.5/dt):floor(1.99/dt)));
-        outputmat(5,i,j) = mean(frmat_e(ceil(2.5/dt):floor(4.5/dt)));
+        outputmat(4,i,j) = mean(frmat_e(ceil(0.5/dt):floor(1.99/dt))); %
+        outputmat(5,i,j) = std(frmat_e(ceil(0.5/dt):floor(1.99/dt)));
         %end
     
     
@@ -149,6 +154,8 @@ xlabel("WEI"), ylabel("WEE"), title("E-unit average fr, WII = " + num2str(WII))
 c = colorbar;
 c.Label.String = "firing rate (Hz)";
 
-%figure(97), imagesc(x,y,imagemat3), set(gca,'YDir','normal');
-%xlabel("WEI"), ylabel("WEE"), title("E-unit firing rate after inhibition input given")
-%colorbar
+% figure(97), imagesc(x,y,imagemat3), set(gca,'YDir','normal');
+% xlabel("WEI"), ylabel("WEE"), title("E-unit standard deviation")
+% d = colorbar;
+% d.Label.String = "firng rate std";
+

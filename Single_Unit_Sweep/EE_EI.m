@@ -52,7 +52,8 @@ Iapp_e = ones(size(i_stimmat))*Ie_base;
 
 for i = 1:N
     noisevec = randn(size(tvec))*(dt^(0.5))*15;
-    i_stimmat(i,:)= noisevec;
+    i_stimmat(i,:)= noisevec;[f, oscillates] = spectrum(frmat_e, tvec);
+            figure(1), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
     Iapp_e(i,:) = noisevec + Iapp_e(i,:);
 end
 
@@ -76,7 +77,7 @@ end
 % Highlighted spot, first place matches the x-axis (WEI), second place 
 % matches the y-axis (WEE).
 highlight = true;   % Whether highlight the spot on figure.
-highlight_spot = [14 20];
+highlight_spot = [31, 30];
 
 % add all subfolders of current directory into matlab session search
 current_path = pwd;
@@ -95,8 +96,10 @@ for i = 1:Trial
         if i==highlight_spot(2) && j==highlight_spot(1)
             clf
             figure(96), 
-            plot(tvec, frmat_e), hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
+            plot(tvec, frmat_e)%, hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
             title("WEE==" +num2str(WEE_vec(i))+" && WEI=="+num2str(WEI_vec(j))),xlabel("time"), ylabel("firing rate")
+            [f, oscillates] = spectrum(frmat_e, tvec);
+            figure(1), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
         end
 
         %works = true; 
@@ -111,7 +114,7 @@ for i = 1:Trial
             Nss = 0;
         end
         % Test whether there in intrinsic oscillation
-        if std(frmat_e(ceil(0.1/dt):ceil(1.9/dt)))>1
+        if std(frmat_e(ceil(0.5/dt):ceil(1.9/dt)))>1
             Nss = 2;
         end
 
