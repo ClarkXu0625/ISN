@@ -76,7 +76,7 @@ end
 % Highlighted spot, first place matches the x-axis (WEI), second place 
 % matches the y-axis (WEE).
 highlight = true;   % Whether highlight the spot on figure.
-highlight_spot = [26 31];
+highlight_spot = [14 20];
 
 for i = 1:Trial
     WEE = WEE_vec(i);
@@ -89,9 +89,10 @@ for i = 1:Trial
         
         % plot time-firingRate curve for designated paremeter values
         if i==highlight_spot(2) && j==highlight_spot(1)
+            clf
             figure(96), 
-            plot(tvec, frmat_e), title("WEE==" +num2str(WEE_vec(i))+ ...
-                " && WEI=="+num2str(WEI_vec(j))),xlabel("time"), ylabel("firing rate")
+            plot(tvec, frmat_e), hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
+            title("WEE==" +num2str(WEE_vec(i))+" && WEI=="+num2str(WEI_vec(j))),xlabel("time"), ylabel("firing rate")
         end
 
         %works = true; 
