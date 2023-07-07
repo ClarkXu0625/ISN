@@ -81,10 +81,10 @@ for m = 1:length(WII_vec)
         outputmat(2,i,:) = WEI_vec(i);
     end
     
-    % Highlighted spot, first place matches the x-axis (WEI), second place 
+    %% Highlighted spot, first place matches the x-axis (WEI), second place 
     % matches the y-axis (WEE).
     highlight = true;   % Whether highlight the spot on figure.
-    highlight_spot = [35 41];
+    highlight_spot = [174, 90];
     
     
     for i = 1:Trial

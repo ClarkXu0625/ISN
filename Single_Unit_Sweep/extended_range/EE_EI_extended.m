@@ -76,7 +76,7 @@ end
 % Highlighted spot, first place matches the x-axis (WEI), second place 
 % matches the y-axis (WEE).
 highlight = true;   % Whether highlight the spot on figure.
-highlight_spot = [41, 29];
+highlight_spot = [174, 90];
 
 % add all subfolders of current directory into matlab session search
 current_path = '/Users/apple/Documents/GitHub/Lab/Single_Unit_Sweep';
@@ -107,9 +107,6 @@ for i = 1:Trial
         outputmat(3,i,j) = outputmat(3,i,j) + Nss;
         outputmat(4,i,j) = mean(frmat_e(ceil(0.5/dt):floor(1.99/dt))); %
         outputmat(5,i,j) = std(frmat_e(ceil(0.5/dt):floor(1.99/dt)));
-        %end
-    
-    
     end
 end
 
