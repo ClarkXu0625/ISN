@@ -78,20 +78,13 @@ plot(t,re), legend("Active","Non-active"), xlabel("Excit."), ylabel("Firing Rate
 subplot(2,1,2)
 plot(t,ri), legend("Active","Non-active"), xlabel("Inhib."), ylabel("Firing Rate")
 
+
+% add all subfolders of current directory into matlab session search
+current_path = pwd;
+addpath(genpath(current_path))
+
 disp(is_bistable(N, re(:,ceil(1/dt:end)),ri(:,ceil(1/dt:end))))
 
 
-% Given the number of unit, firing rate of excit. and inhib. units, return
-% if the units showing multi-stablity, or firing at uniform firing rate
-function [bistable] = is_bistable(N, re, ri)
-    excit_average = zeros(1,N);
-    inhib_average = zeros(1,N);
-    for i = 1:N
-        excit_average(i) = mean(re(i,:));
-        inhib_average(i) = mean(ri(i,:));
-    end
-    disp(std(excit_average))
-    disp(std(inhib_average))
-    bistable = (std(excit_average)>1 || std(inhib_average)>1);
-end
+
 
