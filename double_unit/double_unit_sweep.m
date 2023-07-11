@@ -84,3 +84,4 @@ x = [0,-5];
 y = [0, 5];
 figure(99), imagesc(x,y,outputmat);
 set(gca,'YDir','normal'), xlabel("WEI"), ylabel("WEE");
+
