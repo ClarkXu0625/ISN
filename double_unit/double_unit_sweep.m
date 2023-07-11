@@ -47,20 +47,29 @@ Ii = I0i*ones(N,1);
 
 sigman = 0.01/sqrt(dt);
 
-Wee0_vec = 0:0.2:5;
-Wie0_vec = 0:-0.2:-5;
-Nvec = length(Wie0_vec);
-outputmat = zeros(Nvec);
+%% Set up params for multiple trials
+Wee0_vec = 0:1:20;
+Wie0_vec = 0:1:20;
+Nvec1 = length(Wee0_vec);
+Nvec2 = length(Wie0_vec);
+outputmat = zeros(Nvec1, Nvec2);
 highlight = [1.6, -0.4];
+output_re = zeros(Nvec1*N, Nvec2*Nt);
+output_ri = zeros(size(output_re));
 
 %% Simulation
-for i = 1:Nvec
+for i = 1:Nvec1
+    i
     Wee0 = Wee0_vec(i);
-    for j = 1:Nvec
-        Wie0 = Wie0_vec(j);
+    for j = 1:Nvec2
+        Wie0 = -Wie0_vec(j);
+
         [re, ri] = ...
             linE_QI(N, M, Nt, dt, Wee0, Wie0, Wiex, Wii0, Wei0, Weix, sigman, Ie, Ii, taue, taui, alpha_e, alpha_i);
         outputmat(i,j) = is_bistable(N, re(:,ceil(1/dt:end)),ri(:,ceil(1/dt:end)));
+
+        output_re = export_fr(N, Nt, re, output_re, i, j);
+        output_ri = export_fr(N, Nt, ri, output_ri, i, j);
 
         %% Analyze and Plot Highlight Point
         if Wee0 == highlight(1) && Wie0 == highlight(2)
@@ -80,8 +89,14 @@ for i = 1:Nvec
     end
 end
 
-x = [0,-5];
-y = [0, 5];
-figure(99), imagesc(x,y,outputmat);
-set(gca,'YDir','normal'), xlabel("WEI"), ylabel("WEE");
+%% Export firing rate matrix re and ri
+writematrix(output_re)
+type 'output_re(20,-20).csv'
+writematrix(output_ri)
+type 'output_ri(20,-20).csv'
+
+% x = [0, -5];
+% y = [0, 20];
+% figure(99), imagesc(x,y,outputmat);
+% set(gca,'YDir','normal'), xlabel("WEI"), ylabel("WEE");
 
