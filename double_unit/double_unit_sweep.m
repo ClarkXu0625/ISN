@@ -10,6 +10,8 @@
 %nonlinear inhibitory unit Firing rate
 %linear excitatory unit Firing rate
 
+% Requirement: current working directory should be double_unit
+
 clear
 
 %% Add all subfolders of current directory into matlab session search
@@ -48,8 +50,8 @@ Ii = I0i*ones(N,1);
 sigman = 0.01/sqrt(dt);
 
 %% Set up params for multiple trials
-Wee0_vec = 0:0.5:10;
-Wie0_vec = 0:0.5:5;
+Wee0_vec = 0:0.1:10;
+Wie0_vec = 0:0.1:5;
 Nvec1 = length(Wee0_vec);
 Nvec2 = length(Wie0_vec);
 outputmat = zeros(Nvec1, Nvec2);
@@ -66,10 +68,10 @@ for i = 1:Nvec1
 
         [re, ri] = ...
             linE_QI(N, M, Nt, dt, Wee0, Wie0, Wiex, Wii0, Wei0, Weix, sigman, Ie, Ii, taue, taui, alpha_e, alpha_i);
-        outputmat(i,j) = is_bistable(N, re(:,ceil(1/dt:end)),ri(:,ceil(1/dt:end)));
+        outputmat(i,j) = is_bistable(N, M, re(:,ceil(1/dt:end)));
 
-        output_re = export_fr(N, Nt, re, output_re, i, j);
-        output_ri = export_fr(N, Nt, ri, output_ri, i, j);
+        %output_re = export_fr(N, Nt, re, output_re, i, j);
+        %output_ri = export_fr(N, Nt, ri, output_ri, i, j);
 
         %% Analyze and Plot Highlight Point
         if Wee0 == highlight(1) && Wie0 == highlight(2)

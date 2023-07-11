@@ -1,13 +1,27 @@
 % Given the number of unit, firing rate of excit. and inhib. units, return
 % if the units showing multi-stablity, or firing at uniform firing rate
-function [bistable] = is_bistable(N, re, ri)
-    excit_average = zeros(1,N);
-    inhib_average = zeros(1,N);
-    for i = 1:N
-        excit_average(i) = mean(re(i,:));
-        inhib_average(i) = mean(ri(i,:));
+% Parameter N is number of units, and M is number of "on" unit
+function [bistable] = is_bistable(N, M, re)
+    bistable = 1;
+
+    if M == N   % All units are on
+
+    elseif M == 0  % All units are off
+        
+    else
+        % "off" units are at low firing rate
+        for i = M+1:N
+            if mean(re(i,:)) > 0.5
+                bistable = 0;
+            end
+        end
+
+        % "on" unit should not stay in quescence status
+        for i = 1:M
+            if mean(re(i,:)) < 1
+                bistable = 0;
+            end
+        end
+
     end
-    %disp(std(excit_average))
-    %disp(std(inhib_average))
-    bistable = (std(excit_average)>1 || std(inhib_average)>1);
 end

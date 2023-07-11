@@ -17,7 +17,7 @@ for i = 1:Nvec1
     for j = Nvec2
         re_vec = read_fr(N, Nt, output_re, i, j);
         ri_vec = read_fr(N, Nt, output_ri, i, j);
-        outputmat(i,j) = is_bistable(N, re, ri);
+        outputmat(i,j) = is_bistable(N, M, re, ri);
     end
 end
 

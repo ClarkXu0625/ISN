@@ -24,10 +24,18 @@ taui = 0.010;       %Time constant for Inhibitory cells
 
 Wee0 = 1.5;         %Excit.-Excit. connection strength
 Wie0 = -0.4;        %Inhib.-Excit. connection strength
-Wei0 = 2.5;         %Excit-Excit connection strength
+Wei0 = 3.0;         %Excit-Excit connection strength
 Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
 Wiex = 0;
 Wii0 = -1;          %Inhib-Inhib connection strength
+
+%% Original values
+% Wee0 = 1.5;         %Excit.-Excit. connection strength
+% Wie0 = -0.4;        %Inhib.-Excit. connection strength
+% Wei0 = 2.5;         %Excit-Excit connection strength
+% Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
+% Wiex = 0;
+% Wii0 = -1;  
 
 I0e = 1;            %Excit. applied current
 I0i = 17;           %Inhib. applied current
@@ -56,7 +64,7 @@ ri = zeros(N,Nt);
 re(1:M,1) = 15;
 ri(1:M,1) = 0;
 
-sigman = 0.01/sqrt(dt);
+sigman = 0;%0.01/sqrt(dt);
 
 %simulation
 for i = 2:Nt
@@ -83,7 +91,7 @@ plot(t,ri), legend("Active","Non-active"), xlabel("Inhib."), ylabel("Firing Rate
 current_path = pwd;
 addpath(genpath(current_path))
 
-disp(is_bistable(N, re(:,ceil(1/dt:end)),ri(:,ceil(1/dt:end))))
+disp(is_bistable(N, M, re(:,ceil(1/dt:end))))
 
 
 
