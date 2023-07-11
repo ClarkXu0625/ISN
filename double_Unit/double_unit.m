@@ -12,7 +12,7 @@
 
 clear
 N = 2;              %Total excitatory-inhibitory firing rate unit pairs
-M = 1;              %Total number of active excitatory-inhibitory firing rate unit pairs           
+M = 2;              %Total number of active excitatory-inhibitory firing rate unit pairs           
 
 dt = 0.0001;        %Time step for simulation
 tmax = 10;          %Duration of simulation
@@ -22,7 +22,7 @@ Nt = length(t);
 taue = 0.010;       %Time constant for excitatory cells
 taui = 0.010;       %Time constant for Inhibitory cells
 
-Wee0 = 1.5;         %Excit.-Excit. connection strength
+Wee0 = 1.6;         %Excit.-Excit. connection strength
 Wie0 = -0.4;        %Inhib.-Excit. connection strength
 Wei0 = 3.0;         %Excit-Excit connection strength
 Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
@@ -64,7 +64,7 @@ ri = zeros(N,Nt);
 re(1:M,1) = 15;
 ri(1:M,1) = 0;
 
-sigman = 0;%0.01/sqrt(dt);
+sigman = 0.01/sqrt(dt);
 
 %simulation
 for i = 2:Nt
