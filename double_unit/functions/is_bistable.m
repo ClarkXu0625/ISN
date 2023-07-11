@@ -7,7 +7,7 @@ function [bistable] = is_bistable(N, re, ri)
         excit_average(i) = mean(re(i,:));
         inhib_average(i) = mean(ri(i,:));
     end
-    disp(std(excit_average))
-    disp(std(inhib_average))
+    %disp(std(excit_average))
+    %disp(std(inhib_average))
     bistable = (std(excit_average)>1 || std(inhib_average)>1);
 end
