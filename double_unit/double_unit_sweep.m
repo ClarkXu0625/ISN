@@ -48,8 +48,8 @@ Ii = I0i*ones(N,1);
 sigman = 0.01/sqrt(dt);
 
 %% Set up params for multiple trials
-Wee0_vec = 0:1:20;
-Wie0_vec = 0:1:20;
+Wee0_vec = 0:0.5:10;
+Wie0_vec = 0:0.5:5;
 Nvec1 = length(Wee0_vec);
 Nvec2 = length(Wie0_vec);
 outputmat = zeros(Nvec1, Nvec2);
@@ -90,13 +90,12 @@ for i = 1:Nvec1
 end
 
 %% Export firing rate matrix re and ri
-writematrix(output_re)
-type 'output_re(20,-20).csv'
-writematrix(output_ri)
-type 'output_ri(20,-20).csv'
+%writematrix(output_re,'output_re(20,-20).csv')
 
-% x = [0, -5];
-% y = [0, 20];
-% figure(99), imagesc(x,y,outputmat);
-% set(gca,'YDir','normal'), xlabel("WEI"), ylabel("WEE");
+%writematrix(output_ri, 'output_ri(20,-20).csv')
+
+x = [0, -5];
+y = [0, 10];
+figure(99), imagesc(x,y,outputmat);
+set(gca,'YDir','normal'), xlabel("Wie0"), ylabel("Wee0");
 
