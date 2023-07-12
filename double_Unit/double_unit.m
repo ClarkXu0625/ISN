@@ -22,12 +22,13 @@ Nt = length(t);
 taue = 0.010;       %Time constant for excitatory cells
 taui = 0.010;       %Time constant for Inhibitory cells
 
-Wee0 = 1.6;         %Excit.-Excit. connection strength
-Wie0 = -0.4;        %Inhib.-Excit. connection strength
-Wei0 = 3.0;         %Excit-Excit connection strength
+Wee0 = 3.4;         %Excit.-Excit. connection strength
+Wie0 = -1.5;        %Inhib.-Excit. connection strength
+Wei0 = 2.9;         %Excit-Excit connection strength
 Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
 Wiex = 0;
 Wii0 = -1;          %Inhib-Inhib connection strength
+noise = 1;
 
 %% Original values
 % Wee0 = 1.5;         %Excit.-Excit. connection strength
@@ -64,7 +65,10 @@ ri = zeros(N,Nt);
 re(1:M,1) = 15;
 ri(1:M,1) = 0;
 
-sigman = 0.01/sqrt(dt);
+sigman = 0;
+if noise
+    sigman = 0.01/sqrt(dt);
+end
 
 %simulation
 for i = 2:Nt
@@ -92,6 +96,8 @@ current_path = pwd;
 addpath(genpath(current_path))
 
 disp(is_bistable(N, M, re(:,ceil(1/dt:end))))
+disp(std(re(1,ceil(1/dt:end))))
+disp(std(re(2,ceil(1/dt:end))))
 
 
 
