@@ -28,6 +28,7 @@ Wei0 = 3.0;         %Excit-Excit connection strength
 Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
 Wiex = 0;
 Wii0 = -1;          %Inhib-Inhib connection strength
+noise = 1;
 
 %% Original values
 % Wee0 = 1.5;         %Excit.-Excit. connection strength
@@ -65,7 +66,10 @@ ri = zeros(N,Nt);
 re(1:M,1) = 15;
 ri(1:M,1) = 0;
 
-sigman = 0.01/sqrt(dt);
+sigman = 0;
+if noise
+    sigman = 0.01/sqrt(dt);
+end
 
 %simulation
 for i = 2:Nt

@@ -20,7 +20,7 @@ addpath(genpath(current_path))
 
 %% Parameters
 N = 2;              %Total excitatory-inhibitory firing rate unit pairs
-M = 1;              %Total number of active excitatory-inhibitory firing rate unit pairs           
+M = 2;              %Total number of active excitatory-inhibitory firing rate unit pairs           
 
 dt = 0.0001;        %Time step for simulation
 tmax = 10;          %Duration of simulation
@@ -47,11 +47,11 @@ alpha_i = 0.02;     %Gain of inhib. cells
 Ie = I0e*ones(N,1);
 Ii = I0i*ones(N,1);
 
-sigman = 0.01/sqrt(dt);
+sigman = 0.005/sqrt(dt);
 
 %% Set up params for multiple trials
-Wee0_vec = 0:0.1:10;
-Wie0_vec = 0:0.1:5;
+Wee0_vec = 0:0.2:5;
+Wie0_vec = 0:0.05:1.5;
 Nvec1 = length(Wee0_vec);
 Nvec2 = length(Wie0_vec);
 outputmat = zeros(Nvec1, Nvec2);
@@ -96,8 +96,8 @@ end
 
 %writematrix(output_ri, 'output_ri(20,-20).csv')
 
-x = [0, -5];
-y = [0, 10];
+x = [0, -1.5];
+y = [0, 5];
 figure(99), imagesc(x,y,outputmat);
 set(gca,'YDir','normal'), xlabel("Wie0"), ylabel("Wee0");
 title("Wei0 = " + num2str(Wei0))
