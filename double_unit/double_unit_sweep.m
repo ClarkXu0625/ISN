@@ -32,7 +32,7 @@ taui = 0.010;       %Time constant for Inhibitory cells
 
 %Wee0 = 1.5;         %Excit.-Excit. connection strength
 %Wie0 = -0.4;        %Inhib.-Excit. connection strength
-Wei0 = 2.5;         %Excit-Excit connection strength
+Wei0 = 3;%2.5;         %Excit-Excit connection strength
 Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
 Wiex = 0;
 Wii0 = -1;          %Inhib-Inhib connection strength
@@ -68,7 +68,7 @@ for i = 1:Nvec1
 
         [re, ri] = ...
             linE_QI(N, M, Nt, dt, Wee0, Wie0, Wiex, Wii0, Wei0, Weix, sigman, Ie, Ii, taue, taui, alpha_e, alpha_i);
-        outputmat(i,j) = is_bistable(N, M, re(:,ceil(1/dt:end)));
+        outputmat(i,j) = is_bistable(N, M, re(:,ceil(0.5/dt:end)));
 
         %output_re = export_fr(N, Nt, re, output_re, i, j);
         %output_ri = export_fr(N, Nt, ri, output_ri, i, j);
@@ -100,4 +100,5 @@ x = [0, -5];
 y = [0, 10];
 figure(99), imagesc(x,y,outputmat);
 set(gca,'YDir','normal'), xlabel("Wie0"), ylabel("Wee0");
+title("Wei0 = " + num2str(Wei0))
 

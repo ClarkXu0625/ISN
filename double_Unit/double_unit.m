@@ -12,7 +12,7 @@
 
 clear
 N = 2;              %Total excitatory-inhibitory firing rate unit pairs
-M = 2;              %Total number of active excitatory-inhibitory firing rate unit pairs           
+M = 1;              %Total number of active excitatory-inhibitory firing rate unit pairs           
 
 dt = 0.0001;        %Time step for simulation
 tmax = 10;          %Duration of simulation
@@ -22,8 +22,8 @@ Nt = length(t);
 taue = 0.010;       %Time constant for excitatory cells
 taui = 0.010;       %Time constant for Inhibitory cells
 
-Wee0 = 1.6;         %Excit.-Excit. connection strength
-Wie0 = -0.4;        %Inhib.-Excit. connection strength
+Wee0 = 8.5;         %Excit.-Excit. connection strength
+Wie0 = -3;        %Inhib.-Excit. connection strength
 Wei0 = 3.0;         %Excit-Excit connection strength
 Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
 Wiex = 0;
@@ -42,6 +42,7 @@ I0i = 17;           %Inhib. applied current
 
 alpha_e = 1;        %Gain of excit. cells
 alpha_i = 0.02;     %Gain of inhib. cells
+rmax = 100;
 
 %Connection Matricies
 Wee = Wee0*eye(N);
@@ -77,6 +78,9 @@ for i = 2:Nt
     
     re(:,i) = max(re(:,i),0);
     ri(:,i) = max(ri(:,i),0);
+    re(:,i) = min(re(:,i),rmax);
+    ri(:,i) = min(ri(:,i),rmax);
+
 end
 
 figure(1)
@@ -91,7 +95,7 @@ plot(t,ri), legend("Active","Non-active"), xlabel("Inhib."), ylabel("Firing Rate
 current_path = pwd;
 addpath(genpath(current_path))
 
-disp(is_bistable(N, M, re(:,ceil(1/dt:end))))
+disp(is_bistable(N, M, re(:,ceil(0.5/dt:end))))
 
 
 
