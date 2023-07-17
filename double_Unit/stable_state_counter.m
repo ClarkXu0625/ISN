@@ -19,7 +19,7 @@ current_path = pwd;
 addpath(genpath(current_path))
 
 %% Parameters
-N = 2;              %Total excitatory-inhibitory firing rate unit pairs
+N = 5;              %Total excitatory-inhibitory firing rate unit pairs
 
 %M = 2;              %Total number of active excitatory-inhibitory firing rate unit pairs           
 
@@ -82,7 +82,7 @@ for M = 0:N
 end
 %% Export stable state to a csv file
 output = export_bistable(N, Nvec1, Nvec2, outputmat);
-writematrix(output,'stablestates(6,-5).csv')
+writematrix(output,'5ss(6,-5).csv')
 
 x = [0, -max_vec2];
 y = [0, max_vec1];
