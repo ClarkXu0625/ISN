@@ -20,7 +20,7 @@ addpath(genpath(current_path))
 
 %% Parameters
 N = 2;              %Total excitatory-inhibitory firing rate unit pairs
-M = 2;              %Total number of active excitatory-inhibitory firing rate unit pairs           
+M = 0;              %Total number of active excitatory-inhibitory firing rate unit pairs           
 
 dt = 0.0001;        %Time step for simulation
 tmax = 10;          %Duration of simulation
@@ -32,8 +32,8 @@ taui = 0.010;       %Time constant for Inhibitory cells
 
 %Wee0 = 1.5;         %Excit.-Excit. connection strength
 %Wie0 = -0.4;        %Inhib.-Excit. connection strength
-Wei0 = 3;%2.5;         %Excit-Excit connection strength
-Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
+Wei0 = 2.5;          %Excit-Excit connection strength
+Weix = 0.5;          %Excit.-Inhibitory Cross connection strength
 Wiex = 0;
 Wii0 = -1;          %Inhib-Inhib connection strength
 
@@ -50,8 +50,10 @@ Ii = I0i*ones(N,1);
 sigman = 0.005/sqrt(dt);
 
 %% Set up params for multiple trials
-Wee0_vec = 0:0.2:5;
-Wie0_vec = 0:0.05:1.5;
+max_vec1 = 5;   % maximum value for vector 1
+max_vec2 = 5;   % maximum value for vector 2
+Wee0_vec = 0:0.5:max_vec1;
+Wie0_vec = 0:0.5:max_vec2;
 Nvec1 = length(Wee0_vec);
 Nvec2 = length(Wie0_vec);
 outputmat = zeros(Nvec1, Nvec2);
@@ -68,7 +70,8 @@ for i = 1:Nvec1
 
         [re, ri] = ...
             linE_QI(N, M, Nt, dt, Wee0, Wie0, Wiex, Wii0, Wei0, Weix, sigman, Ie, Ii, taue, taui, alpha_e, alpha_i);
-        outputmat(i,j) = is_bistable(N, M, re(:,ceil(0.5/dt:end)));
+         [bistable, ~] = is_bistable(N, M, re(:,ceil(1.5/dt:end)));
+         outputmat(i,j) = bistable;
 
         %output_re = export_fr(N, Nt, re, output_re, i, j);
         %output_ri = export_fr(N, Nt, ri, output_ri, i, j);
@@ -96,8 +99,8 @@ end
 
 %writematrix(output_ri, 'output_ri(20,-20).csv')
 
-x = [0, -1.5];
-y = [0, 5];
+x = [0, -max_vec2];
+y = [0, max_vec1];
 figure(99), imagesc(x,y,outputmat);
 set(gca,'YDir','normal'), xlabel("Wie0"), ylabel("Wee0");
 title("Wei0 = " + num2str(Wei0))
