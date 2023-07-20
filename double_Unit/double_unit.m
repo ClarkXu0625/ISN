@@ -11,8 +11,8 @@
 %linear excitatory unit Firing rate
 
 clear
-N = 5;              %Total excitatory-inhibitory firing rate unit pairs
-M = 4;              %Total number of active excitatory-inhibitory firing rate unit pairs           
+N = 2;              %Total excitatory-inhibitory firing rate unit pairs
+M = 0;              %Total number of active excitatory-inhibitory firing rate unit pairs           
 
 dt = 0.0001;        %Time step for simulation
 tmax = 10;          %Duration of simulation
@@ -22,13 +22,14 @@ Nt = length(t);
 taue = 0.010;       %Time constant for excitatory cells
 taui = 0.010;       %Time constant for Inhibitory cells
 
-Wee0 = 1.6;         %Excit.-Excit. connection strength
-Wie0 = -0.4;        %Inhib.-Excit. connection strength
-Wei0 = 2.5;         %Excit-Excit connection strength
+Wee0 = 1.3;         %Excit.-Excit. connection strength
+Wie0 = -0.2;        %Inhib.-Excit. connection strength
+Wei0 = 2.9;         %Excit-Excit connection strength
 Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
 Wiex = 0;
 Wii0 = -1;          %Inhib-Inhib connection strength
-noise = 0;
+noise = 1;
+initial_fr = 20;    %Initial firing rate
 
 %% Original values
 % Wee0 = 1.5;         %Excit.-Excit. connection strength
@@ -63,12 +64,12 @@ disp(off_stable)
 %Rate Matricies
 re = zeros(N,Nt);
 ri = zeros(N,Nt);
-re(1:M,1) = 30;%50.3;
+re(1:M,1) = initial_fr;%50.3;
 ri(1:M,1) = 0;
 
 sigman = 0;
 if noise
-    sigman = 0.01/sqrt(dt);
+    sigman = 0.005/sqrt(dt);    % initial value is 0.01
 end
 
 %simulation
@@ -90,7 +91,7 @@ end
 figure(1)
 clf
 subplot(2,1,1)
-plot(t,re), legend("Active","Active","Non-active","Non-active","Non-active"), xlabel("Excit."), ylabel("Firing Rate")
+plot(t,re), legend("Active", "Non-active"), xlabel("Excit."), ylabel("Firing Rate")
 subplot(2,1,2)
 plot(t,ri), legend("Active","Non-active"), xlabel("Inhib."), ylabel("Firing Rate")
 

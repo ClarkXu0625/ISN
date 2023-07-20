@@ -1,4 +1,4 @@
-function [re, ri] = linE_QI(N, M, Nt, dt, Wee0, Wie0, Wiex, Wii0, Wei0, Weix, sigman, Ie, Ii, taue, taui, alpha_e, alpha_i)
+function [re, ri] = linE_QI(N, M, Nt, dt, Wee0, Wie0, Wiex, Wii0, Wei0, Weix, sigman, Ie, Ii, taue, taui, alpha_e, alpha_i, initial_fr)
 
     %Connection Matricies
     Wee = Wee0*eye(N);
@@ -9,7 +9,7 @@ function [re, ri] = linE_QI(N, M, Nt, dt, Wee0, Wie0, Wiex, Wii0, Wei0, Weix, si
     %Rate Matricies
     re = zeros(N,Nt);
     ri = zeros(N,Nt);
-    re(1:M,1) = 15;
+    re(1:M,1) = initial_fr;
     ri(1:M,1) = 0;
 
     for i = 2:Nt

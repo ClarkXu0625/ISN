@@ -19,8 +19,8 @@ current_path = pwd;
 addpath(genpath(current_path))
 
 %% Parameters
-N = 5;              %Total excitatory-inhibitory firing rate unit pairs
-M = 3;              %Total number of active excitatory-inhibitory firing rate unit pairs           
+N = 2;              %Total excitatory-inhibitory firing rate unit pairs
+M = 1;              %Total number of active excitatory-inhibitory firing rate unit pairs           
 
 dt = 0.0001;        %Time step for simulation
 tmax = 10;          %Duration of simulation
@@ -32,10 +32,12 @@ taui = 0.010;       %Time constant for Inhibitory cells
 
 %Wee0 = 1.5;         %Excit.-Excit. connection strength
 %Wie0 = -0.4;        %Inhib.-Excit. connection strength
-Wei0 = 2.5;         %Excit-Excit connection strength
-Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
+Wei0 = 2.5;          %Excit-Excit connection strength
+Weix = 0.5;          %Excit.-Inhibitory Cross connection strength
 Wiex = 0;
 Wii0 = -1;          %Inhib-Inhib connection strength
+noise = 1;          %boolean value
+initial_fr = 20;    %Initial firing rate
 
 I0e = 1;            %Excit. applied current
 I0i = 17;           %Inhib. applied current
@@ -47,7 +49,7 @@ alpha_i = 0.02;     %Gain of inhib. cells
 Ie = I0e*ones(N,1);
 Ii = I0i*ones(N,1);
 
-sigman = 0.005/sqrt(dt);
+sigman = 0.005/sqrt(dt);    % initial value is 0.01
 
 %% Set up params for multiple trials
 max_vec1 = 6;   % maximum value for vector 1
@@ -61,6 +63,12 @@ highlight = [1.6, -0.4];
 output_re = zeros(Nvec1*N, Nvec2*Nt);
 output_ri = zeros(size(output_re));
 
+% noise term
+sigman = 0;
+if noise
+    sigman = 0.005/sqrt(dt);
+end
+
 %% Simulation
 for i = 1:Nvec1
     i
@@ -69,7 +77,7 @@ for i = 1:Nvec1
         Wie0 = -Wie0_vec(j);
 
         [re, ri] = ...
-            linE_QI(N, M, Nt, dt, Wee0, Wie0, Wiex, Wii0, Wei0, Weix, sigman, Ie, Ii, taue, taui, alpha_e, alpha_i);
+            linE_QI(N, M, Nt, dt, Wee0, Wie0, Wiex, Wii0, Wei0, Weix, sigman, Ie, Ii, taue, taui, alpha_e, alpha_i, initial_fr);
         outputmat(i,j) = is_bistable(N, M, re(:,ceil(1/dt:end)));
 
         %output_re = export_fr(N, Nt, re, output_re, i, j);
