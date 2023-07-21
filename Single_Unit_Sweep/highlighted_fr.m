@@ -5,8 +5,6 @@
 % Written for faster simulation
 % Single trial that plots the firing rate curve of designated parameters 
 
-clear
-
 %% 
 N=1;          %value for how many coupled networks
 
@@ -31,14 +29,14 @@ tao_i = 5e-3;  %time constant of i. cells
 
 %WEI = 3.5;     %connection strength from e. to i. cells 3.5
 %WEE = 3;       %connection strength from e. cell to self 3
-WII = -6;      %connection strength from i. cell to self
+WII = -5;      %connection strength from i. cell to self
 WIE = -3;    %connection strength from i. to e cells
 WEIX = 0;     %connection strength from e. cells to i cells from other coupled units. must be changed with N
-WEI = 4.9;
-WEE = 2.8;
+WEI = 16;
+WEE = 8.5;
 Ii_base=-10;
 Ie_base=-1;
-
+noise = 1;  % boolean, whether not to add noise term
 
 %% applied charge
 i_stimmat = zeros(N,numel(tvec));%each row is a vector for applied current to each coupled set's inhibitory unit, with # of columns = tmax/dt
@@ -47,8 +45,15 @@ Iapp_e = ones(size(i_stimmat))*Ie_base;
 %random noise
 
 for i = 1:N
-    noisevec = randn(size(tvec))*(dt^(0.5))*15;
-    i_stimmat(i,:)= noisevec;
+    if noise
+        noisevec = randn(size(tvec))*(dt^(0.5))*15;
+    else
+        noisevec = zeros(size(tvec));
+    end
+
+    i_stimmat(i,:)= noisevec;    
+
+    
     Iapp_e(i,:) = noisevec + Iapp_e(i,:);
 end
 
@@ -72,13 +77,13 @@ addpath(genpath(current_path))
 % plot time-firingRate curve for designated paremeter values
 
 clf
-figure(2), 
+figure(1), 
 plot(tvec, frmat_e)%, hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
 title("WEE==" +num2str(WEE)+" && WEI==" +num2str(WEI)+" && WII==" +num2str(WII))
 xlabel("time"), ylabel("firing rate")
 
 disp(std(frmat_e(round(0.2/dt):round(1.9/dt))))
 [f, oscillates] = spectrum(frmat_e, tvec, dt);
-figure(3), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
+%figure(3), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
             
         

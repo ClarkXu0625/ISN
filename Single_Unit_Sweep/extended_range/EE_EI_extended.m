@@ -35,7 +35,7 @@ tao_i = 5e-3;  %time constant of i. cells
 
 %WEI = 3.5;     %connection strength from e. to i. cells 3.5
 %WEE = 3;       %connection strength from e. cell to self 3
-WII = -6;      %connection strength from i. cell to self
+WII = -5;      %connection strength from i. cell to self
 WIE = -3;    %connection strength from i. to e cells
 WEIX = 0;     %connection strength from e. cells to i cells from other coupled units. must be changed with N
 WEI_vec = 0:0.1:20;
@@ -43,6 +43,7 @@ WEE_vec = 0:0.1:20;
 Ii_base=-10;
 Ie_base=-1;
 Trial = length(WEI_vec);    % number of trials for each parameter
+noise = 0;  % boolean term deciding whether add noise term
 
 %% applied charge
 i_stimmat = zeros(N,numel(tvec));%each row is a vector for applied current to each coupled set's inhibitory unit, with # of columns = tmax/dt
@@ -51,7 +52,11 @@ Iapp_e = ones(size(i_stimmat))*Ie_base;
 %random noise
 
 for i = 1:N
-    noisevec = randn(size(tvec))*(dt^(0.5))*15;
+    if noise
+        noisevec = randn(size(tvec))*(dt^(0.5))*15;
+    else
+        noisevec = zeros(size(tvec));
+    end
     i_stimmat(i,:)= noisevec;
     Iapp_e(i,:) = noisevec + Iapp_e(i,:);
 end
@@ -84,6 +89,7 @@ addpath(genpath(current_path))
 
 %% Simulation
 for i = 1:Trial
+    i
     WEE = WEE_vec(i);
     for j = 1:Trial
         WEI = WEI_vec(j);
@@ -102,7 +108,7 @@ for i = 1:Trial
             figure(1), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
         end
 
-        Nss = bistability_analysis(frmat_e, tvec, dt);    % calling bistability analysis
+        Nss = bistability_analysis(frmat_e, tvec, dt, noise);    % calling bistability analysis
 
         outputmat(3,i,j) = outputmat(3,i,j) + Nss;
         outputmat(4,i,j) = mean(frmat_e(ceil(0.5/dt):floor(1.99/dt))); %

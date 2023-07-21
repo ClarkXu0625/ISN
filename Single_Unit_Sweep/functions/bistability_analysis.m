@@ -1,4 +1,4 @@
-function Nss = bistability_analysis(fr, t, dt)
+function Nss = bistability_analysis(fr, t, dt, noise)
 % Function bistability_analysis analyzes the firing rate curve. Nss value
 % is 1 when there's bistability, and 0 when the unit is quiescense or
 % always firing at high firing rate. Nss returns 2 when they show
@@ -6,17 +6,11 @@ function Nss = bistability_analysis(fr, t, dt)
 % oscillations simply analyzing the standard deviation of firing rate, so
 % it would also call spectrum function when the standard deviation is above
 % certain levels (in this case 0.1) to save running time
-    
+    if nargin < 4
+        noise = 1;
+    end
     Nss = 1;
 
-    % Test whether there in intrinsic oscillation
-    % Stops at 0.5 second when neurons are mostly settled down
-    if std(fr(ceil(0.5/dt):ceil(1.9/dt)))>0.1
-        [~, ~, oscillates] = spectrum(fr, t, dt);
-        if oscillates
-            Nss = 2;
-        end
-    end
 
     if fr(ceil(1.5/dt))<0.2
         Nss = 0;
@@ -27,4 +21,21 @@ function Nss = bistability_analysis(fr, t, dt)
     if fr(ceil(4/dt))>0.2
         Nss = 0;
     end
+    
+    % Test whether there in intrinsic oscillation
+    % Stops at 0.5 second when neurons are mostly settled down
+    if noise    % when noise present in the given data
+        if std(fr(ceil(0.5/dt):ceil(1.9/dt)))>0.1
+            [~, ~, oscillates] = spectrum(fr, t, dt);
+            if oscillates
+                Nss = 2;
+            end
+        end
+    else    % no noise at all, any deviation should be oscillation
+        if std(fr(ceil(0.5/dt):ceil(1.9/dt)))>0.1
+            Nss = 2;
+        end
+    end
+
+    
 end
