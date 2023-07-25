@@ -1,11 +1,13 @@
-function [frmat_i,frmat_e] = QEI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax) 
-
+function [frmat_i,frmat_e] = QEI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax, init_fr) 
+    if nargin < 18
+        init_fr = 5;
+    end
     frmat_e = zeros(N,numel(tvec));
     Imat_e = frmat_e;
     frmat_i = zeros(N,numel(tvec));
     Imat_i = frmat_i;
-    frmat_e(:, 1)= 5;
-    frmat_i(:, 1)= 5;
+    frmat_e(:, 1)= init_fr;
+    frmat_i(:, 1)= init_fr;
 
     %% simulation
     for t = 2:numel(tvec)
