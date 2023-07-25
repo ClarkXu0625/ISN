@@ -100,7 +100,7 @@ for m = 1:length(WII_vec)
     
             %% Simulation, functions are "linI_QE", "linE_QI", and "QEI"
             [frmat_i,frmat_e] = ...
-                QEI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax,15);
+                QEI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax, 25);
             
             % plot time-firingRate curve for designated paremeter values
             if i==highlight_spot(2) && j==highlight_spot(1)

@@ -32,11 +32,11 @@ tao_i = 5e-3;  %time constant of i. cells
 WII = -5;      %connection strength from i. cell to self
 WIE = -3;    %connection strength from i. to e cells
 WEIX = 0;     %connection strength from e. cells to i cells from other coupled units. must be changed with N
-WEI = 16;
-WEE = 8.5;
+WEI = 3.7;
+WEE = 3.7;
 Ii_base=-10;
 Ie_base=-1;
-noise = 1;  % boolean, whether not to add noise term
+noise = 0;  % boolean, whether not to add noise term
 
 %% applied charge
 i_stimmat = zeros(N,numel(tvec));%each row is a vector for applied current to each coupled set's inhibitory unit, with # of columns = tmax/dt
@@ -76,7 +76,6 @@ addpath(genpath(current_path))
 
 % plot time-firingRate curve for designated paremeter values
 
-clf
 figure(1), 
 plot(tvec, frmat_e)%, hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
 title("WEE==" +num2str(WEE)+" && WEI==" +num2str(WEI)+" && WII==" +num2str(WII))
