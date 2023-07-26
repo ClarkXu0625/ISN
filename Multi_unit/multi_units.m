@@ -8,8 +8,7 @@
 % Nonlinear inhibitory unit Firing rate
 % Linear excitatory unit Firing rate
 
-% Noise could be chosen
-
+% Noise duration could be manually set
 
 clear
 N = 2;              %Total excitatory-inhibitory firing rate unit pairs
