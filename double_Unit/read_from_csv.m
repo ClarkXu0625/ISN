@@ -1,4 +1,9 @@
 N = 5;
+%% Add all subfolders of current directory into matlab session search
+current_path = pwd;
+addpath(genpath(current_path))
+
+% read matrix from csv
 [output, Nvec1, Nvec2] = read_bistable("5ss(6,-5).csv", N);
 stable_states = zeros(Nvec1, Nvec2);
 

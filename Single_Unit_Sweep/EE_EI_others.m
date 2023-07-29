@@ -44,6 +44,7 @@ WII_vec = -1:-1:-6;
 Ii_base=-10;
 Ie_base=-1;
 Trial = length(WEI_vec);    % number of trials for each parameter
+noise = 0;  % boolean term deciding whether add noise term
 
 % add all subfolders of current directory into matlab session search
 current_path = pwd;
@@ -59,7 +60,12 @@ for m = 1:length(WII_vec)
     %random noise
     
     for i = 1:N
-        noisevec = randn(size(tvec))*(dt^(0.5))*15;
+        if noise
+            noisevec = randn(size(tvec))*(dt^(0.5))*15;
+        else
+            noisevec = zeros(size(tvec));
+        end
+        %noisevec = randn(size(tvec))*(dt^(0.5))*15;
         i_stimmat(i,:)= noisevec;
         Iapp_e(i,:) = noisevec + Iapp_e(i,:);
     end
@@ -94,7 +100,7 @@ for m = 1:length(WII_vec)
     
             %% Simulation, functions are "linI_QE", "linE_QI", and "QEI"
             [frmat_i,frmat_e] = ...
-                QEI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax);
+                QEI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax, 25);
             
             % plot time-firingRate curve for designated paremeter values
             if i==highlight_spot(2) && j==highlight_spot(1)
@@ -104,7 +110,7 @@ for m = 1:length(WII_vec)
             end
     
 
-            Nss = bistability_analysis(frmat_e, tvec, dt);    % calling bistability analysis
+            Nss = bistability_analysis(frmat_e, tvec, dt, noise);    % calling bistability analysis
 
             outputmat(3,i,j) = outputmat(3,i,j) + Nss;
             outputmat(4,i,j) = mean(frmat_e(ceil(0.5/dt):floor(1.99/dt)));
