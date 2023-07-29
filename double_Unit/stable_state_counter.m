@@ -17,7 +17,7 @@ clear
 %% Add all subfolders of current directory into matlab session search
 current_path = pwd;
 addpath(genpath(current_path))
-
+    
 %% Parameters
 N = 5;              %Total excitatory-inhibitory firing rate unit pairs
 
