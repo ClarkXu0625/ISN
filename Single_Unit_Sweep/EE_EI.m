@@ -52,8 +52,9 @@ Iapp_e = ones(size(i_stimmat))*Ie_base;
 
 for i = 1:N
     noisevec = randn(size(tvec))*(dt^(0.5))*15;
-    i_stimmat(i,:)= noisevec;[f, oscillates] = spectrum(frmat_e, tvec, dt);
-            figure(1), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
+    i_stimmat(i,:)= noisevec;
+    %[f, oscillates] = spectrum(frmat_e, tvec, dt);
+    %figure(1), plot(f, oscillates), title("power spectrum of highlighted spot"), xlabel("firing rate (Hz)")
     Iapp_e(i,:) = noisevec + Iapp_e(i,:);
 end
 
