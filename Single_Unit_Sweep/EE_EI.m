@@ -78,7 +78,7 @@ end
 % Highlighted spot, first place matches the x-axis (WEI), second place 
 % matches the y-axis (WEE).
 highlight = true;   % Whether highlight the spot on figure.
-highlight_spot = [30 29];
+highlight_spot = [30 28];
 
 % add all subfolders of current directory into matlab session search
 current_path = pwd;
