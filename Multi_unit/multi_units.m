@@ -8,11 +8,11 @@
 % Nonlinear inhibitory unit Firing rate
 % Linear excitatory unit Firing rate
 
-% Noise duration could be manually set
+% Noise duration could be manually set by start_t and end_t
 
 clear
-N = 2;              %Total excitatory-inhibitory firing rate unit pairs
-M = 1;              %Total number of active excitatory-inhibitory firing rate unit pairs           
+N = 3;              %Total excitatory-inhibitory firing rate unit pairs
+M = 2;              %Total number of active excitatory-inhibitory firing rate unit pairs           
 
 dt = 0.0001;        %Time step for simulation
 tmax = 10;          %Duration of simulation
@@ -103,15 +103,27 @@ for i = 2:Nt
     ri(:,i) = min(ri(:,i),rmax);
 end
 
-legend_array = zeros(N);
-
-figure(1)
-clf
-subplot(2,1,1)
-plot(t,re), legend("Active", "Non-active"), xlabel("Excit."), ylabel("Firing Rate")
-subplot(2,1,2)
-plot(t,ri), legend("Active","Non-active"), xlabel("Inhib."), ylabel("Firing Rate")
-
+% Plot the firing rates, active units in figure1 and inactive units in
+% figure2. Plot active and inactive separately in subplots
+title_str = num2str("linE-QI, ");
+if M == N
+    figure(1), clf
+    plot(t,re), legend(strcat("unit " + (1:N))), xlabel("active unit"), ylabel("Firing Rate"), title(title_str+"Excit. Units")
+    figure(2), clf
+    plot(t,ri), legend(strcat("unit " + (1:N))), xlabel("active unit"), ylabel("Firing Rate"), title(title_str+"Inhib. Units")
+elseif M == 0
+    figure(1), clf
+    plot(t,re), legend(strcat("unit " + (1:N))), xlabel("inactive unit"), ylabel("Firing Rate"), title(title_str+"Excit. Units")
+    figure(2), clf
+    plot(t,ri), legend(strcat("unit " + (1:N))), xlabel("inactive unit"), ylabel("Firing Rate"), title(title_str+"Inhib. Units")
+else
+    figure(1), clf
+    subplot(2,1,1), plot(t,re(1:M,:)), legend(strcat("unit " + (1:M))), xlabel("active unit"), ylabel("Firing Rate"), sgtitle(title_str+"Excit. Units")
+    subplot(2,1,2), plot(t,re(M+1:N,:)), legend(strcat("unit " + (M+1:N))), xlabel("inactive unit"), ylabel("Firing Rate")
+    figure(2), clf
+    subplot(2,1,1), plot(t,ri(1:M,:)), legend(strcat("unit " + (1:M))), xlabel("active unit"), ylabel("Firing Rate"), sgtitle(title_str+"Inhib. Units")
+    subplot(2,1,2), plot(t,ri(M+1:N,:)), legend(strcat("unit " + (M+1:N))), xlabel("inactive unit"), ylabel("Firing Rate")
+end
 
 % add all subfolders of current directory into matlab session search
 current_path = pwd;
