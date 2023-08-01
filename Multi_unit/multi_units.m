@@ -11,41 +11,46 @@
 % Noise duration could be manually set by start_t and end_t
 
 clear
-N = 3;              %Total excitatory-inhibitory firing rate unit pairs
-M = 2;              %Total number of active excitatory-inhibitory firing rate unit pairs           
+N = 3;              % Total excitatory-inhibitory firing rate unit pairs
+M = 2;              % Total number of active excitatory-inhibitory firing rate unit pairs           
 
-dt = 0.0001;        %Time step for simulation
-tmax = 10;          %Duration of simulation
-t = 0:dt:tmax;      %Simulation time vector
+%% Add all subfolders of current directory into matlab session search
+current_path = pwd;
+addpath(genpath(current_path))
+
+%% Parameters
+dt = 0.0001;        % Time step for simulation
+tmax = 10;          % Duration of simulation
+t = 0:dt:tmax;      % Simulation time vector
 Nt = length(t);
 
-taue = 0.010;       %Time constant for excitatory cells
-taui = 0.010;       %Time constant for Inhibitory cells
+taue = 0.010;       % Time constant for excitatory cells
+taui = 0.010;       % Time constant for Inhibitory cells
 
-Wee0 = 1.3;         %Excit.-Excit. connection strength
-Wie0 = -0.2;        %Inhib.-Excit. connection strength
-Wei0 = 2.9;         %Excit-Excit connection strength
-Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
+Wee0 = 1.3;         % Excit.-Excit. connection strength
+Wie0 = -0.2;        % Inhib.-Excit. connection strength
+Wei0 = 2.9;         % Excit-Excit connection strength
+Weix = 0.5;         % Excit.-Inhibitory Cross connection strength
 Wiex = -0.1;
-Wii0 = -1;          %Inhib-Inhib connection strength
+Wii0 = -1;          % Inhib-Inhib connection strength
 
 %% Original values
-% Wee0 = 1.5;         %Excit.-Excit. connection strength
-% Wie0 = -0.4;        %Inhib.-Excit. connection strength
-% Wei0 = 2.5;         %Excit-Excit connection strength
+% Wee0 = 1.5;         % Excit.-Excit. connection strength
+% Wie0 = -0.4;        % Inhib.-Excit. connection strength
+% Wei0 = 2.5;         % Excit-Excit connection strength
 % Weix = 0.5;           %Excit.-Inhibitory Cross connection strength
 % Wiex = 0;
 % Wii0 = -1;  
 
-I0e = 1;            %Excit. applied current
-I0i = 17;           %Inhib. applied current
+I0e = 1;            % Excit. applied current
+I0i = 17;           % Inhib. applied current
 
-alpha_e = 1;        %Gain of excit. cells
-alpha_i = 0.02;     %Gain of inhib. cells
-rmax = 100;         %Maximum firing rate
+alpha_e = 1;        % Gain of excit. cells
+alpha_i = 0.02;     % Gain of inhib. cells
+rmax = 100;         % Maximum firing rate
 
-theta_e = 0;%1;    %threshold of activity for e. cells
-theta_i = 0;%5;    %threshold of activity for i. cells
+theta_e = 0;%1;    % threshold of activity for e. cells
+theta_i = 0;%5;    % threshold of activity for i. cells
 
 %Connection Matricies
 Wee = Wee0*eye(N);
@@ -65,7 +70,7 @@ off_stable = Wee0 - 1 - Wie_tilde*(Wei0-Weix);
 disp(off_stable)
 
 %Rate Matricies
-initial_fr = 20;    %Initial firing rate, can be altered.
+initial_fr = 20;    % Initial firing rate, can be altered.
 re = zeros(N,Nt);
 ri = zeros(N,Nt);
 re(1:M,1) = initial_fr;%50.3;
