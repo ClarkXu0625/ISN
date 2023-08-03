@@ -11,8 +11,8 @@
 % Noise duration could be manually set by start_t and end_t
 
 clear
-N = 2;              % Total excitatory-inhibitory firing rate unit pairs
-M = 1;              % Total number of active excitatory-inhibitory firing rate unit pairs           
+N = 5;              % Total excitatory-inhibitory firing rate unit pairs
+M = 2;              % Total number of active excitatory-inhibitory firing rate unit pairs           
 
 %% Add all subfolders of current directory into matlab session search
 current_path = pwd;
@@ -31,7 +31,7 @@ Wee0 = 1.3;         % Excit.-Excit. connection strength
 Wie0 = -0.2;        % Inhib.-Excit. connection strength
 Wei0 = 2.9;         % Excit-Excit connection strength
 Weix = 0.5;         % Excit.-Inhibitory Cross connection strength
-Wiex = -0.1;
+Wiex = 0;
 Wii0 = -1;          % Inhib-Inhib connection strength
 
 %% Original values
