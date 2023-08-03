@@ -135,6 +135,10 @@ xlabel("WEI"), ylabel("WEE"), title("E-unit average fr, WII = " + num2str(WII))
 c = colorbar;
 c.Label.String = "firing rate (Hz)";
 
-%figure(97), imagesc(x,y,imagemat3), set(gca,'YDir','normal');
-%xlabel("WEI"), ylabel("WEE"), title("E-unit firing rate after inhibition input given")
+% surface plot
+figure(97), 
+surf(WEI_vec, WEE_vec, imagemat2)
+colormap winter, 
+set(gca,'YDir','normal');
+xlabel("WEI"), ylabel("WEE"), title("E-unit firing rate")
 %colorbar
