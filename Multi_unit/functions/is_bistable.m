@@ -25,15 +25,18 @@ function [bistable, Nstate] = is_bistable(N, M, re, dt, start_t)
 
     % Ensure firing rate reaches a stable state, not oscillating
     for i = 1:M
-        if std(re(i,floor(3/dt):floor(start_t/dt-1))) > 0.01 || ... % no oscillation
+        %disp(std(re(i , floor(3/dt):floor(start_t/dt-1))))
+        if std(re(i , floor(3/dt):floor(start_t/dt-1))) > 0.01 || ... % no oscillation
             mean(re(i,:)) > 90  % not firing at rmax
             bistable = 0;
+
         end
         
         % Unstable fixed point; if different firing rate before and after
         % noise is introduced, not in an stable fixed point
-        if abs(re(i,floor(3/dt)) - re(i,floor(7/dt))) > 0.5
+        if abs(re(i,floor(4.9/dt)) - re(i,floor(9/dt))) > 0.5
             bistable = 0;
+            %disp("8")
         end
     end
 
@@ -50,10 +53,11 @@ function [bistable, Nstate] = is_bistable(N, M, re, dt, start_t)
                 bistable = 0;
             end            
         end
-    else       
+    else   % Units are partially turned on       
         % "off" units are at low firing rate
+
         for i = M+1:N
-            if mean(re(i,:)) > 0.5
+            if mean(re(i, floor(3/dt):floor(start_t/dt)-1)) > 0.5
                 bistable = 0;
             end
         end
@@ -61,7 +65,8 @@ function [bistable, Nstate] = is_bistable(N, M, re, dt, start_t)
         % "on" unit should not stay in quescence status, and should not
         % always fire at rmax
         for i = 1:M
-            if mean(re(i,:)) < 1 || mean(re(i,:)) > 90
+            period = re(i, floor(3/dt):floor(start_t/dt)-1);
+            if mean(period) < 1 || mean(period) > 90
                 bistable = 0;
             end            
         end

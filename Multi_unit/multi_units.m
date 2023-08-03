@@ -11,8 +11,8 @@
 % Noise duration could be manually set by start_t and end_t
 
 clear
-N = 3;              % Total excitatory-inhibitory firing rate unit pairs
-M = 2;              % Total number of active excitatory-inhibitory firing rate unit pairs           
+N = 2;              % Total excitatory-inhibitory firing rate unit pairs
+M = 1;              % Total number of active excitatory-inhibitory firing rate unit pairs           
 
 %% Add all subfolders of current directory into matlab session search
 current_path = pwd;
@@ -80,7 +80,7 @@ ri(1:M,1) = 0;
 % if cut the noise, set start_t and end_t = 0
 % if want to add noise to all time, set start_t = 0, end_t = tmax
 sigman = 0.005/sqrt(dt);    % initial value is 0.01 
-start_t = 6;    % noise start time
+start_t = 5;    % noise start time
 end_t = 6.5;    % noise ending time
 
 %% simulation
@@ -134,7 +134,7 @@ end
 current_path = pwd;
 addpath(genpath(current_path))
 
-disp(is_bistable(N, M, re(:,ceil(0.5/dt:end))))
+disp(is_bistable(N, M, re, dt, start_t))
 
 
 
