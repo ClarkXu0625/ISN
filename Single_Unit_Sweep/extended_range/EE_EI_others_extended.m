@@ -131,8 +131,8 @@ for m = 1:length(WII_vec)
     
     figure(98), subplot(2,3,m), imagesc(x,y,imagemat2), set(gca,'YDir','normal');
     xlabel("WEI"), ylabel("WEE"), title("E-unit average fr, W_II = " + num2str(WII_vec(m)))
-    c = colorbar;
-    c.Label.String = "firing rate (Hz)";
+    %c = colorbar;
+    %c.Label.String = "firing rate (Hz)";
     
     %figure(97), imagesc(x,y,imagemat3), set(gca,'YDir','normal');
     %xlabel("WEI"), ylabel("WEE"), title("E-unit firing rate after inhibition input given")

@@ -77,10 +77,11 @@ addpath(genpath(current_path))
 % plot time-firingRate curve for designated paremeter values
 
 figure(1), 
-subplot(2,1,2), plot(tvec, frmat_e)%, hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
-title("Excit. Unit firing rate ","WEE==" +num2str(WEE)+" && WEI==" +num2str(WEI)+" && WII==" +num2str(WII))
-xlabel("time"), ylabel("firing rate")
-subplot(2,1,1), plot(tvec, Iapp_i), xlabel("time"), ylabel("Inhibitory Applied current")
+subplot(2,1,2), plot(tvec, frmat_e), hold on, plot(tvec, frmat_i), legend('e-unit', 'i-unit')
+title("Firing rate of single pair ISN ","WEE==" +num2str(WEE)+" && WEI==" +num2str(WEI)+" && WII==" +num2str(WII))
+xlabel("time"), ylabel("firing rate"), ylim([-1, 10])
+
+subplot(2,1,1), plot(tvec, Iapp_i), xlabel("time"), ylabel("Inhibitory Applied current"), ylim([-15, 10])
 title("Inhibitory Appled current turned excitatory unit off")
 
 disp(std(frmat_e(round(0.2/dt):round(1.9/dt))))

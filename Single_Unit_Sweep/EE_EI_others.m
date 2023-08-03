@@ -100,7 +100,7 @@ for m = 1:length(WII_vec)
     
             %% Simulation, functions are "linI_QE", "linE_QI", and "QEI"
             [frmat_i,frmat_e] = ...
-                QEI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax, 5);
+                QEI(N, tvec, dt, WEI, WEE, WII, WIE, WEIX, Iapp_i, Iapp_e, theta_i, theta_e, tao_i, tao_e, alpha_e, alpha_i, rmax, 15);
             
             % plot time-firingRate curve for designated paremeter values
             if i==highlight_spot(2) && j==highlight_spot(1)
@@ -130,9 +130,9 @@ for m = 1:length(WII_vec)
     y = [0,10];
     figure(99), subplot(2,3,m), imagesc(x,y,imagemat1);
     set(gca,'YDir','normal'), xlabel("WEI"), ylabel("WEE");
-    co = colorbar();
-    co.Ticks = [0, 1, 2, 3];
-    co.TickLabels = ["single" "bistable" "oscillation" "highlighted"];
+    %co = colorbar();
+    %co.Ticks = [0, 1, 2, 3];
+    %co.TickLabels = ["single" "bistable" "oscillation" "highlighted"];
     title("Bistability when WII = " + num2str(WII_vec(m)));
     
     
@@ -145,3 +145,9 @@ for m = 1:length(WII_vec)
     %xlabel("WEI"), ylabel("WEE"), title("E-unit firing rate after inhibition input given")
     %colorbar
 end
+
+%figure(99), 
+%colorbar('Ticks', [0, 1, 2, 3], 'TickLabels', ["single" "bistable" "oscillation" "highlighted"])
+%co = colorbar();
+%co.Ticks = [0, 1, 2, 3];
+%co.TickLabels = ["single" "bistable" "oscillation" "highlighted"];
